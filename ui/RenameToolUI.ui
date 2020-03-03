@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>hrp</author>
+ <class>RenameToolUI</class>
+ <widget class="QMainWindow" name="RenameToolUI">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>901</width>
+    <height>595</height>
+   </rect>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::StrongFocus</enum>
+  </property>
+  <property name="windowTitle">
+   <string>简易批量重命名工具 v0.0.1</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QGroupBox" name="groupBox_RuleList">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>310</y>
+      <width>501</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+     </font>
+    </property>
+    <property name="title">
+     <string>规则列表</string>
+    </property>
+    <widget class="QListWidget" name="list_RulesList">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>421</width>
+       <height>161</height>
+      </rect>
+     </property>
+     <property name="toolTip">
+      <string>用户创建的重命名规则列表，同一规则可以同时与不同文件夹组合加入任务列表，或同一文件夹可以每次组合不同规则。软件关闭后规则列表不会丢失。</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_RL_AddToTaskList">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>220</y>
+       <width>311</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>将选中规则与目标文件夹组合加入任务</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_RL_DelSelected">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>19</y>
+       <width>51</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>删除</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_RL_EditSelected">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>79</y>
+       <width>51</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>编辑</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_CTGPath">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>189</y>
+       <width>51</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>…</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_TGPath">
+     <property name="geometry">
+      <rect>
+       <x>90</x>
+       <y>190</y>
+       <width>341</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="maxLength">
+      <number>255</number>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_RL_ClearAll">
+     <property name="geometry">
+      <rect>
+       <x>440</x>
+       <y>49</y>
+       <width>51</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>清空</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>190</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>目标文件夹:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_SetDefaultDir">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>220</y>
+       <width>161</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>设置默认起始路径</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_AlcTask">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>10</y>
+      <width>371</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+     </font>
+    </property>
+    <property name="title">
+     <string>任务</string>
+    </property>
+    <widget class="QListWidget" name="list_AlcTasks">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>261</width>
+       <height>231</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_AT_Clear">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>140</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>清空</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_AT_DelSelected">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>180</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>移除</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_AT_MoveUp">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>50</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>上移</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_AT_MoveDown">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>90</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>下移</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>161</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>待执行任务 / 执行顺序:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_AT_PrevNRun">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>230</y>
+       <width>81</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>预览/执行</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_SetRule">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>501</width>
+      <height>301</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+     </font>
+    </property>
+    <property name="title">
+     <string>设定规则</string>
+    </property>
+    <widget class="QTabWidget" name="tabwid">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>503</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tab_Rep">
+      <attribute name="title">
+       <string>替换</string>
+      </attribute>
+      <widget class="QLineEdit" name="lineEdit_RepWith">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>25</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>此处留空则表示将删除前面填写的字符。</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>24</x>
+         <y>25</y>
+         <width>21</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>将:</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>250</x>
+         <y>25</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>替换为:</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_RepSrc">
+       <property name="geometry">
+        <rect>
+         <x>48</x>
+         <y>25</y>
+         <width>191</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>必填项，此处不能留空。</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_RRep">
+      <attribute name="title">
+       <string>范围替换</string>
+      </attribute>
+      <widget class="QLineEdit" name="lineEdit_RRepLB">
+       <property name="geometry">
+        <rect>
+         <x>65</x>
+         <y>10</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>填写想要用来确定左边界的字符串(字符串越长匹配越精确)，左边界可以留空，留空时左边界默认为文件名最前端。</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_7">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>131</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>边界内字符替换为：</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_RRepWith">
+       <property name="geometry">
+        <rect>
+         <x>140</x>
+         <y>40</y>
+         <width>351</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>此处留空则表示将删除范围内所有字符，注意此处和左右边界不能同时为空。</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>左边界：</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_RRepRB">
+       <property name="geometry">
+        <rect>
+         <x>320</x>
+         <y>10</y>
+         <width>111</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>填写想要用来确定右边界的字符串(字符串越长匹配越精确)，右边界可以留空，留空时右边界默认为文件名末尾(默认不含扩展名)。</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_6">
+       <property name="geometry">
+        <rect>
+         <x>265</x>
+         <y>10</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>右边界：</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_IncludeRB">
+       <property name="geometry">
+        <rect>
+         <x>443</x>
+         <y>10</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>是否包括边界字符。</string>
+       </property>
+       <property name="text">
+        <string>包含</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkBox_IncludeLB">
+       <property name="geometry">
+        <rect>
+         <x>185</x>
+         <y>10</y>
+         <width>51</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>是否包括边界字符。</string>
+       </property>
+       <property name="text">
+        <string>包含</string>
+       </property>
+      </widget>
+      <widget class="Line" name="line">
+       <property name="geometry">
+        <rect>
+         <x>243</x>
+         <y>10</y>
+         <width>16</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_Insert">
+      <attribute name="title">
+       <string>插入</string>
+      </attribute>
+      <widget class="QLineEdit" name="lineEdit_InsertForm">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>25</y>
+         <width>181</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>自定义日期时间格式：%Y(年)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可自由组合，也可与其他普通字符组合。</string>
+       </property>
+       <property name="text">
+        <string>[%Y %m %d %H:%M]</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>25</y>
+         <width>41</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>插入：</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_InsertWith">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>25</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <item>
+        <property name="text">
+         <string>日期/时间</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>普通字符</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>序号</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_InsertPos">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>25</y>
+         <width>61</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>自定义位置支持输入百分比和绝对数值，如果输入的绝对数值大于文件名长度，则插入到文件名末尾。</string>
+       </property>
+       <property name="text">
+        <string>0.0%</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>25</y>
+         <width>71</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>插入位置：</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QComboBox" name="comboBox_SpInf">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>260</y>
+       <width>101</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>不含扩展名</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>仅限扩展名</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>整个文件名</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_Exts">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>230</y>
+       <width>373</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>此处留空表示将对所有文件类型进行操作。</string>
+     </property>
+     <property name="placeholderText">
+      <string>多个扩展名请用空格隔开，例如：mp3 mp4 mkv。</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox_Word">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>91</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>单词模式下，如果文件名以单词组成(以空格分开的词，包括中文)，则会按单词进行匹配，不会拆分单词。</string>
+     </property>
+     <property name="text">
+      <string>单词模式</string>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="comboBox_InExcExt">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>101</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>对于后面列出的扩展名的文件，限定只对其起作用或对其不起作用。</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>指定扩展名</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>排除扩展名</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>120</x>
+       <y>260</y>
+       <width>71</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。</string>
+     </property>
+     <property name="text">
+      <string>作用范围：</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_SaveToList">
+     <property name="geometry">
+      <rect>
+       <x>373</x>
+       <y>259</y>
+       <width>121</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>保存到规则列表</string>
+     </property>
+    </widget>
+    <widget class="QPlainTextEdit" name="plainText_ExcludeFolder">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>140</y>
+       <width>443</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::NoContextMenu</enum>
+     </property>
+     <property name="toolTip">
+      <string>要排除的文件夹请输入完整、正确路径，否则填写的文件夹将不生效。</string>
+     </property>
+     <property name="lineWrapMode">
+      <enum>QPlainTextEdit::NoWrap</enum>
+     </property>
+     <property name="placeholderText">
+      <string>填写多个文件夹时请每行填写一个文件夹路径。</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>41</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>排除:</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_setrule_clear">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>259</y>
+       <width>51</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>清空</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_LogNRestore">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>310</y>
+      <width>371</width>
+      <height>261</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Microsoft YaHei UI</family>
+     </font>
+    </property>
+    <property name="title">
+     <string>记录 / 还原</string>
+    </property>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>30</y>
+       <width>81</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>重命名记录：</string>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="list_Logs">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>351</width>
+       <height>161</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_LNR_TryTRestore">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>220</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>尝试还原</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_LNR_ClearLog">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>220</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>清空记录</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_LNR_ViewLog">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>220</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>查看记录</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusBar">
+   <property name="font">
+    <font>
+     <pointsize>8</pointsize>
+    </font>
+   </property>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>tabwid</tabstop>
+  <tabstop>lineEdit_RepSrc</tabstop>
+  <tabstop>lineEdit_RepWith</tabstop>
+  <tabstop>lineEdit_RRepLB</tabstop>
+  <tabstop>checkBox_IncludeLB</tabstop>
+  <tabstop>lineEdit_RRepRB</tabstop>
+  <tabstop>checkBox_IncludeRB</tabstop>
+  <tabstop>lineEdit_RRepWith</tabstop>
+  <tabstop>comboBox_InsertWith</tabstop>
+  <tabstop>lineEdit_InsertForm</tabstop>
+  <tabstop>lineEdit_InsertPos</tabstop>
+  <tabstop>plainText_ExcludeFolder</tabstop>
+  <tabstop>comboBox_InExcExt</tabstop>
+  <tabstop>lineEdit_Exts</tabstop>
+  <tabstop>checkBox_Word</tabstop>
+  <tabstop>comboBox_SpInf</tabstop>
+  <tabstop>btn_SaveToList</tabstop>
+  <tabstop>list_RulesList</tabstop>
+  <tabstop>btn_RL_DelSelected</tabstop>
+  <tabstop>btn_RL_EditSelected</tabstop>
+  <tabstop>btn_RL_AddToTaskList</tabstop>
+  <tabstop>list_AlcTasks</tabstop>
+  <tabstop>btn_AT_MoveUp</tabstop>
+  <tabstop>btn_AT_MoveDown</tabstop>
+  <tabstop>btn_AT_Clear</tabstop>
+  <tabstop>btn_AT_DelSelected</tabstop>
+  <tabstop>lineEdit_TGPath</tabstop>
+  <tabstop>btn_CTGPath</tabstop>
+  <tabstop>btn_AT_PrevNRun</tabstop>
+  <tabstop>list_Logs</tabstop>
+  <tabstop>btn_LNR_ClearLog</tabstop>
+  <tabstop>btn_LNR_ViewLog</tabstop>
+  <tabstop>btn_LNR_TryTRestore</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>
