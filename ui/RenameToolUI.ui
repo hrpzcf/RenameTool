@@ -376,6 +376,126 @@
        </property>
       </widget>
      </widget>
+     <widget class="QWidget" name="tab_Insert">
+      <attribute name="title">
+       <string>插入</string>
+      </attribute>
+      <widget class="QLineEdit" name="lineEdit_InsertForm">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>25</y>
+         <width>181</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>8</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>自定义日期时间格式：%Y(年)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可自由组合，也可与其他普通字符组合。</string>
+       </property>
+       <property name="text">
+        <string>[%Y %m %d %H:%M]</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>25</y>
+         <width>41</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>插入：</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_InsertWith">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>25</y>
+         <width>101</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <item>
+        <property name="text">
+         <string>日期/时间</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>普通字符</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>序号</string>
+        </property>
+       </item>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_InsertPos">
+       <property name="geometry">
+        <rect>
+         <x>430</x>
+         <y>25</y>
+         <width>61</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Consolas</family>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>自定义位置支持输入百分比和绝对数值，如果输入的绝对数值大于文件名长度，则插入到文件名末尾。</string>
+       </property>
+       <property name="text">
+        <string>0.0%</string>
+       </property>
+       <property name="maxLength">
+        <number>255</number>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>360</x>
+         <y>25</y>
+         <width>71</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>插入位置：</string>
+       </property>
+      </widget>
+     </widget>
      <widget class="QWidget" name="tab_RRep">
       <attribute name="title">
        <string>范围替换</string>
@@ -552,126 +672,6 @@
        </property>
        <property name="orientation">
         <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_Insert">
-      <attribute name="title">
-       <string>插入</string>
-      </attribute>
-      <widget class="QLineEdit" name="lineEdit_InsertForm">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>25</y>
-         <width>181</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>8</pointsize>
-        </font>
-       </property>
-       <property name="toolTip">
-        <string>自定义日期时间格式：%Y(年)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可自由组合，也可与其他普通字符组合。</string>
-       </property>
-       <property name="text">
-        <string>[%Y %m %d %H:%M]</string>
-       </property>
-       <property name="maxLength">
-        <number>255</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>25</y>
-         <width>41</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei UI</family>
-        </font>
-       </property>
-       <property name="text">
-        <string>插入：</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_InsertWith">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>25</y>
-         <width>101</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei UI</family>
-        </font>
-       </property>
-       <item>
-        <property name="text">
-         <string>日期/时间</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>普通字符</string>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>序号</string>
-        </property>
-       </item>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_InsertPos">
-       <property name="geometry">
-        <rect>
-         <x>430</x>
-         <y>25</y>
-         <width>61</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Consolas</family>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
-       <property name="toolTip">
-        <string>自定义位置支持输入百分比和绝对数值，如果输入的绝对数值大于文件名长度，则插入到文件名末尾。</string>
-       </property>
-       <property name="text">
-        <string>0.0%</string>
-       </property>
-       <property name="maxLength">
-        <number>255</number>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_4">
-       <property name="geometry">
-        <rect>
-         <x>360</x>
-         <y>25</y>
-         <width>71</width>
-         <height>22</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Microsoft YaHei UI</family>
-        </font>
-       </property>
-       <property name="text">
-        <string>插入位置：</string>
        </property>
       </widget>
      </widget>

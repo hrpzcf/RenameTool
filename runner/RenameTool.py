@@ -14,6 +14,7 @@ sys.path = [os.path.dirname(filepath)] + sys.path
 
 import pickle
 from Renamer import Task
+from copy import deepcopy
 from PyQt5.QtWidgets import QFileDialog as QFD
 from PyQt5.QtWidgets import QMainWindow as QMW
 from PyQt5.QtWidgets import QApplication as QAPP
@@ -73,7 +74,7 @@ class RenameTool(QMW, RTUI):
         self.comboBox_InsertWith.currentIndexChanged.connect(self._setform)
         self.btn_RL_ClearAll.clicked.connect(self.rl_clear)
         self.btn_SetDefaultDir.clicked.connect(self.setdefaultdir)
-        self.btn_CTGPath.clicked.connect(self._chtarget)
+        self.btn_CTGPath.clicked.connect(self._dptarget)
         self.btn_AT_MoveUp.clicked.connect(self._taskmoveup)
         self.btn_AT_MoveDown.clicked.connect(self._taskmovedown)
         self.btn_AT_Clear.clicked.connect(self._taskclear)
@@ -212,13 +213,6 @@ class RenameTool(QMW, RTUI):
             exts = " ".join(exts)
         word = "是" if pk["word"] else "否"
         spinf = pk["spinf"]
-        if spinf == 0:
-            spinf = "不含扩展名"
-        elif spinf == 1:
-            spinf = "仅限扩展名"
-        else:
-            spinf = "整个文件名"
-
         title += f"排除文件夹:【{excfd}】，{inexcext}【{exts}】，单词模式:【{word}】，作用范围:【{spinf}】。"
 
         return title
@@ -283,7 +277,6 @@ class RenameTool(QMW, RTUI):
             self.lineEdit_RepSrc.setFocus()
             return False
         state["repwith"] = self.lineEdit_RepWith.text()
-        print(state)
         self.packetlist.append(state)
         return True
 
@@ -291,7 +284,6 @@ class RenameTool(QMW, RTUI):
         """
         设置“替换”中各控件的状态。
         """
-        self.tabwid.setCurrentIndex(0)
         self._setcommon(state)
         if state["repsrc"]:
             self.lineEdit_RepSrc.setText(state["repsrc"])
@@ -327,7 +319,6 @@ class RenameTool(QMW, RTUI):
         """
         设置“范围替换”中各控件状态。
         """
-        self.tabwid.setCurrentIndex(1)
         self._setcommon(state)
         if state["rreplb"]:
             self.lineEdit_RRepLB.setText(state["rreplb"])
@@ -379,7 +370,6 @@ class RenameTool(QMW, RTUI):
         """
         设置“插入”中各控件状态。
         """
-        self.tabwid.setCurrentIndex(2)
         self._setcommon(state)
         self.comboBox_InsertWith.setCurrentText(state["insertwith"])
         if state["form"]:
@@ -396,7 +386,7 @@ class RenameTool(QMW, RTUI):
         """
         根据tabview的标签页位置获取相应页下的用户输入数据并添加到规则列表、保存到文件。
         """
-        funlist = [self.get_rep, self.get_rrep, self.get_insert]
+        funlist = [self.get_rep, self.get_insert, self.get_rrep]
         if funlist[self.tabwid.currentIndex()]():
             self.ruleslistupdate()
 
@@ -406,10 +396,13 @@ class RenameTool(QMW, RTUI):
         根据字典中head设置控件状态。
         """
         if (tmp := state["head"]) == "rep":
+            self.tabwid.setCurrentWidget(self.tab_Rep)
             self._set_rep(state)
         elif tmp == "rrep":
+            self.tabwid.setCurrentWidget(self.tab_RRep)
             self._set_rrep(state)
-        else:
+        elif tmp == "insert":
+            self.tabwid.setCurrentWidget(self.tab_Insert)
             self._set_insert(state)
 
     def clearstate(self):
@@ -483,7 +476,7 @@ class RenameTool(QMW, RTUI):
         """
         设置默认目标文件夹。
         """
-        dfdir = self._seldir()
+        dfdir = self._selectdir()
         if not dfdir:
             self.settip("未设置默认起始路径。")
             return False
@@ -491,12 +484,14 @@ class RenameTool(QMW, RTUI):
         self._savesettings()
         self.settip("默认起始路径设置成功。")
 
-    def _seldir(self):
+    def _selectdir(self):
         """
         选择文件夹。
         """
-        dirpath = QFD.getExistingDirectory(self, "选择目标文件夹", self.defaultdir)
-        return os.path.realpath(dirpath)
+        folderpath = QFD.getExistingDirectory(self, "选择目标文件夹", self.defaultdir)
+        if folderpath:
+            return os.path.realpath(folderpath)
+        return folderpath
 
     def _rl_delselected(self):
         """
@@ -512,6 +507,7 @@ class RenameTool(QMW, RTUI):
                 self.settip("还未选中任何规则！")
             return False
         curit = self.packetlist.pop(ind)
+        # 以下左ind是删除其中一项后要选中的项，如果右ind大于0就选中前面一项，小于等于0时：lth不为空就选中第0项，为空就不选中。
         ind = (ind - 1) if (ind > 0) else (0 if lth > 0 else None)
         self.ruleslistupdate(ind)
         return curit
@@ -542,23 +538,24 @@ class RenameTool(QMW, RTUI):
             return False
         dirpath = self.lineEdit_TGPath.text()
         if (not dirpath) or (not os.path.exists(dirpath)):
-            dirpath = self._seldir()
+            dirpath = self._selectdir()
         if not dirpath:
             self.settip("未选择目标文件夹。")
             return False
         self.settip()
-        pkdic = dict(self.packetlist[ind])
+        print(self.packetlist[ind])
+        pkdic = deepcopy(self.packetlist[ind])
         self.tasklist.append(
             Task(self._pktitle(pkdic), os.path.realpath(dirpath), pkdic)
         )
         self.tasklistupdate()
         return True
 
-    def _chtarget(self):
+    def _dptarget(self):
         """
         “...”按钮选择路径并显示到“目标文件夹”后的文本框。
         """
-        tg = self._seldir()
+        tg = self._selectdir()
         if not tg:
             self.settip("没有选择文件夹。")
             return False
@@ -611,7 +608,8 @@ class RenameTool(QMW, RTUI):
         """
         预览任务执行结果并让用户决定是否执行。
         """
-        pass
+        for i in self.tasklist:
+            i.preview()
 
 
 if __name__ == "__main__":
