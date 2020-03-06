@@ -158,7 +158,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox_AlcTask">
+   <widget class="QGroupBox" name="groupBox_Tasks">
     <property name="geometry">
      <rect>
       <x>520</x>
@@ -175,7 +175,7 @@
     <property name="title">
      <string>任务</string>
     </property>
-    <widget class="QListWidget" name="list_AlcTasks">
+    <widget class="QListWidget" name="list_Tasks">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -185,7 +185,7 @@
       </rect>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_AT_Clear">
+    <widget class="QPushButton" name="btn_TS_Clear">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -198,7 +198,7 @@
       <string>清空</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_AT_DelSelected">
+    <widget class="QPushButton" name="btn_TS_DelSelected">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -211,7 +211,7 @@
       <string>移除</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_AT_MoveUp">
+    <widget class="QPushButton" name="btn_TS_MoveUp">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -224,7 +224,7 @@
       <string>上移</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_AT_MoveDown">
+    <widget class="QPushButton" name="btn_TS_MoveDown">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -250,7 +250,7 @@
       <string>待执行任务 / 执行顺序:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_AT_PrevNRun">
+    <widget class="QPushButton" name="btn_TS_PrevNRun">
      <property name="geometry">
       <rect>
        <x>280</x>
@@ -988,14 +988,14 @@
   <tabstop>btn_RL_DelSelected</tabstop>
   <tabstop>btn_RL_EditSelected</tabstop>
   <tabstop>btn_RL_AddToTaskList</tabstop>
-  <tabstop>list_AlcTasks</tabstop>
-  <tabstop>btn_AT_MoveUp</tabstop>
-  <tabstop>btn_AT_MoveDown</tabstop>
-  <tabstop>btn_AT_Clear</tabstop>
-  <tabstop>btn_AT_DelSelected</tabstop>
+  <tabstop>list_Tasks</tabstop>
+  <tabstop>btn_TS_MoveUp</tabstop>
+  <tabstop>btn_TS_MoveDown</tabstop>
+  <tabstop>btn_TS_Clear</tabstop>
+  <tabstop>btn_TS_DelSelected</tabstop>
   <tabstop>lineEdit_TGPath</tabstop>
   <tabstop>btn_CTGPath</tabstop>
-  <tabstop>btn_AT_PrevNRun</tabstop>
+  <tabstop>btn_TS_PrevNRun</tabstop>
   <tabstop>list_Logs</tabstop>
   <tabstop>btn_LNR_ClearLog</tabstop>
   <tabstop>btn_LNR_ViewLog</tabstop>

@@ -1,14 +1,12 @@
 # coding:utf-8
 
-"""
-    版本：0.0.1
-    功能：RnameTool的执行模块。
-    作者：hrp
-"""
+# 版本：0.0.1
+# 功能：RnameTool的执行模块。
+# 作者：hrp
+
 import os
 import sys
-from time import strftime
-from time import localtime
+from time import localtime, strftime
 
 
 class Task(object):
@@ -19,18 +17,15 @@ class Task(object):
         self.target = target
         self.stdict = statedict
         self.title = title + f"\n目标文件夹：{target}\n{'-' * 42}"
-        self.succesdict, self.presuccesdict = dict(), dict()
-        self.faileddict, self.prefaileddict = dict(), dict()
+        self.succesdict, self.faileddict, self.unchangeddict = dict(), dict(), dict()
+        self.flag_preview = False
 
     def allfiles(self):
-        """
-        返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径。
-        # BUG：作用范围不生效（只显示整个文件名）。
-        """
+        """ 返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径。"""
         fplst = list()
         for root, dirs, files in os.walk(self.target, topdown=True):
             if root in self.stdict["excfd"]:
-                # continue只能阻止walk root目录下的文件，并不能阻止继续深入root的子文件夹，配合topdown=True并实时清空dirs以阻止深入。
+                # 配合topdown=True并实时清空dirs以阻止深入子目录。
                 dirs.clear()
                 continue
             for i in files:
@@ -44,19 +39,20 @@ class Task(object):
                     fplst.append(os.path.join(root, i))
         return fplst
 
-    def _rename(self):
+    def _rename(self, lst):
         pass
 
     def _replace(self, string, repsrc, repwith):
         if repsrc not in string:
             return string
         if self.stdict["word"]:
-            string = string.split(" ")
-            for i in range(len(string)):
-                if string[i] == repsrc:
-                    string[i] = repwith
-            string = [i for i in string if i]
-            string = " ".join(string)
+            tmp = string.split(" ")
+            if repsrc in tmp:
+                for i in range(len(tmp)):
+                    if tmp[i] == repsrc:
+                        tmp[i] = repwith
+                tmp = [i for i in tmp if i]
+                string = " ".join(tmp)
         else:
             string = string.replace(repsrc, repwith)
 
@@ -82,10 +78,10 @@ class Task(object):
                     ext = "." + self._replace(ext[1:], repsrc, repwith)
 
             if len(filename):
-                self.presuccesdict[file] = os.path.join(folder, filename + ext)
+                self.succesdict[file] = os.path.join(folder, filename + ext)
             else:
-                self.prefaileddict[file] = os.path.join(folder, filename + ext)
-        print(self.presuccesdict)
+                self.faileddict[file] = os.path.join(folder, filename + ext)
+        print(self.succesdict)
 
     def _rrep(self):
         pass
@@ -94,17 +90,22 @@ class Task(object):
         pass
 
     def preview(self):
-        if self.stdict["head"] == "rep":
-            self._rep()
-        elif self.stdict["head"] == "rrep":
-            self._rrep()
-        elif self.stdict["head"] == "insert":
-            self._ins()
+        if not self.flag_preview:
+            if self.stdict["head"] == "rep":
+                self._rep()
+            elif self.stdict["head"] == "rrep":
+                self._rrep()
+            elif self.stdict["head"] == "insert":
+                self._ins()
+            self.flag_preview = True
+        return self.succesdict, self.faileddict
 
     def start(self):
-        self.preview()
-        self._rename()
+        if not self.flag_preview:
+            self.preview()
+        self._rename(self.succesdict)
+        return self.succesdict, self.faileddict
 
 
 if __name__ == "__main__":
-    exit(1)
+    exit(0)
