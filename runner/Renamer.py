@@ -10,32 +10,32 @@ from time import localtime, strftime
 
 
 class Task(object):
-    UNUSABLE = r'\/?:*"><|'
+    UNUSABLE = r"\/?:*'><|"
 
     def __init__(self, title, target, statedict):
         self.MAXLENGTH = 255
         self.target = target
         self.stdict = statedict
-        self.title = title + f"\n目标文件夹：{target}\n{'-' * 42}"
+        self.title = title + f'\n目标文件夹：{target}\n{"-" * 42}'
         self.succesdict, self.faileddict, self.unchangeddict = dict(), dict(), dict()
         self.flag_preview = False
 
     def allfiles(self):
-        """ 返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径。"""
+        ''' 返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径。'''
         fplst = list()
         for root, dirs, files in os.walk(self.target, topdown=True):
-            if root in self.stdict["excfd"]:
+            if root in self.stdict['excfd']:
                 # 配合topdown=True并实时清空dirs以阻止深入子目录。
                 dirs.clear()
                 continue
             for i in files:
-                if self.stdict["inexcext"] == "指定扩展名":
-                    if os.path.splitext(i)[1] in self.stdict["exts"]:
+                if self.stdict['inexcext'] == '指定扩展名':
+                    if os.path.splitext(i)[1] in self.stdict['exts']:
                         fplst.append(os.path.join(root, i))
                 else:
-                    if os.path.splitext(i)[1] not in self.stdict["exts"]:
+                    if os.path.splitext(i)[1] not in self.stdict['exts']:
                         fplst.append(os.path.join(root, i))
-                if not self.stdict["exts"]:
+                if not self.stdict['exts']:
                     fplst.append(os.path.join(root, i))
         return fplst
 
@@ -45,37 +45,37 @@ class Task(object):
     def _replace(self, string, repsrc, repwith):
         if repsrc not in string:
             return string
-        if self.stdict["word"]:
-            tmp = string.split(" ")
+        if self.stdict['word']:
+            tmp = string.split(' ')
             if repsrc in tmp:
                 for i in range(len(tmp)):
                     if tmp[i] == repsrc:
                         tmp[i] = repwith
                 tmp = [i for i in tmp if i]
-                string = " ".join(tmp)
+                string = ' '.join(tmp)
         else:
             string = string.replace(repsrc, repwith)
 
         return string
 
     def _rep(self):
-        spinf = self.stdict["spinf"]
-        repsrc, repwith = self.stdict["repsrc"], self.stdict["repwith"]
+        spinf = self.stdict['spinf']
+        repsrc, repwith = self.stdict['repsrc'], self.stdict['repwith']
 
         for file in self.allfiles():
             folder = os.path.dirname(file)
             filename, ext = os.path.splitext(os.path.basename(file))
-            if spinf == "不含扩展名":
+            if spinf == '不含扩展名':
                 if filename:
                     filename = self._replace(filename, repsrc, repwith)
-            elif spinf == "仅限扩展名":
+            elif spinf == '仅限扩展名':
                 if ext:
-                    ext = "." + self._replace(ext[1:], repsrc, repwith)
-            elif spinf == "整个文件名":
+                    ext = '.' + self._replace(ext[1:], repsrc, repwith)
+            elif spinf == '整个文件名':
                 if filename:
                     filename = self._replace(filename, repsrc, repwith)
                 if ext:
-                    ext = "." + self._replace(ext[1:], repsrc, repwith)
+                    ext = '.' + self._replace(ext[1:], repsrc, repwith)
 
             if len(filename):
                 self.succesdict[file] = os.path.join(folder, filename + ext)
@@ -91,11 +91,11 @@ class Task(object):
 
     def preview(self):
         if not self.flag_preview:
-            if self.stdict["head"] == "rep":
+            if self.stdict['head'] == 'rep':
                 self._rep()
-            elif self.stdict["head"] == "rrep":
+            elif self.stdict['head'] == 'rrep':
                 self._rrep()
-            elif self.stdict["head"] == "insert":
+            elif self.stdict['head'] == 'insert':
                 self._ins()
             self.flag_preview = True
         return self.succesdict, self.faileddict
@@ -107,5 +107,5 @@ class Task(object):
         return self.succesdict, self.faileddict
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     exit(0)

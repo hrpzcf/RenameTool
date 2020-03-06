@@ -10,19 +10,35 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Form(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(640, 470)
-        Form.setContextMenuPolicy(QtCore.Qt.ActionsContextMenu)
-        self.textEdit = QtWidgets.QTextEdit(Form)
-        self.textEdit.setGeometry(QtCore.QRect(1, 1, 638, 431))
+class Ui_PreviewUI(object):
+    def setupUi(self, PreviewUI):
+        PreviewUI.setObjectName("PreviewUI")
+        PreviewUI.setWindowModality(QtCore.Qt.ApplicationModal)
+        PreviewUI.resize(640, 480)
+        self.centralwidget = QtWidgets.QWidget(PreviewUI)
+        self.centralwidget.setObjectName("centralwidget")
+        # self.centralwidget = QtWidgets.QWidget(self.centralwidget)
+        # self.centralwidget.setGeometry(QtCore.QRect(0, 0, 641, 481))
+        # self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setContentsMargins(2, 2, 2, 2)
+        self.verticalLayout.setSpacing(2)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
+        font = QtGui.QFont()
+        font.setFamily("Microsoft YaHei UI")
+        font.setPointSize(9)
+        font.setUnderline(False)
+        self.textEdit.setFont(font)
         self.textEdit.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
         self.textEdit.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.textEdit.setReadOnly(True)
         self.textEdit.setObjectName("textEdit")
-        self.pushButton = QtWidgets.QPushButton(Form)
-        self.pushButton.setGeometry(QtCore.QRect(430, 435, 81, 31))
+        self.verticalLayout.addWidget(self.textEdit)
+        self.horizontalLayout = QtWidgets.QHBoxLayout()
+        self.horizontalLayout.setSpacing(2)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         palette = QtGui.QPalette()
         brush = QtGui.QBrush(QtGui.QColor(255, 0, 0))
         brush.setStyle(QtCore.Qt.SolidPattern)
@@ -41,8 +57,8 @@ class Ui_Form(object):
         font.setWeight(75)
         self.pushButton.setFont(font)
         self.pushButton.setObjectName("pushButton")
-        self.pushButton_2 = QtWidgets.QPushButton(Form)
-        self.pushButton_2.setGeometry(QtCore.QRect(550, 435, 81, 31))
+        self.horizontalLayout.addWidget(self.pushButton)
+        self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei UI")
         font.setPointSize(10)
@@ -50,22 +66,27 @@ class Ui_Form(object):
         font.setWeight(50)
         self.pushButton_2.setFont(font)
         self.pushButton_2.setObjectName("pushButton_2")
+        self.horizontalLayout.addWidget(self.pushButton_2)
+        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout.setStretch(0, 94)
+        self.verticalLayout.setStretch(1, 6)
+        PreviewUI.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(PreviewUI)
+        QtCore.QMetaObject.connectSlotsByName(PreviewUI)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, PreviewUI):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "重命名结果预览"))
-        self.pushButton.setText(_translate("Form", "执行"))
-        self.pushButton_2.setText(_translate("Form", "取消"))
+        PreviewUI.setWindowTitle(_translate("PreviewUI", "结果预览"))
+        self.pushButton.setText(_translate("PreviewUI", "执行"))
+        self.pushButton_2.setText(_translate("PreviewUI", "取消"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    PreviewUI = QtWidgets.QMainWindow()
+    ui = Ui_PreviewUI()
+    ui.setupUi(PreviewUI)
+    PreviewUI.show()
     sys.exit(app.exec_())
