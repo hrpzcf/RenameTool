@@ -5,23 +5,22 @@
 # 作者：hrp
 
 import os
-import sys
 from time import localtime, strftime
 
 
 class Task(object):
-    UNUSABLE = r"\/?:*'><|"
+    # UNUSABLE = r"\/?:*'><|"
 
     def __init__(self, title, target, statedict):
         self.MAXLENGTH = 255
         self.target = target
         self.stdict = statedict
-        self.title = title + f'\n目标文件夹：{target}\n{"-" * 42}'
-        self.succesdict, self.faileddict, self.unchangeddict = dict(), dict(), dict()
-        self.flag_preview = False
+        self.title = f'目标：{target}\n{title}\n{"-" * 42}'
+        self.successful, self.failed, self.unchanged = dict(), dict(), list()
+        self._PREVIEWED, self._RENAMED = False, False
 
-    def allfiles(self):
-        ''' 返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径。'''
+    def _allfiles(self):
+        ''' 返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径 '''
         fplst = list()
         for root, dirs, files in os.walk(self.target, topdown=True):
             if root in self.stdict['excfd']:
@@ -40,6 +39,46 @@ class Task(object):
         return fplst
 
     def _rename(self, lst):
+        self._RENAMED = True
+
+    def _rg_str(self, string, rreplb, rreprb):
+        ''' 寻找符合给定范围的字符串(从左至右一次匹配，不是最短匹配，也不是最长匹配)，并返回找到的字符串列表
+            1.不会用正则表达式
+        '''
+        tglist = list()
+        lthlb, lthrb = len(rreplb), len(rreprb)
+        while (lth := len(string)):
+            begin, end = None, None
+            if rreplb:
+                if (tmp := string.find(rreplb)) != -1:
+                    begin = tmp
+                else:
+                    break
+            else:
+                begin = 0
+            if begin is not None:
+                if rreprb:
+                    if (tmp := string[begin + lthlb:].find(rreprb)) != -1:
+                        end = begin + tmp + lthlb
+                    else:
+                        break
+                else:
+                    end = lth
+                if end is not None:
+                    if not self.stdict['inclb']:
+                        begin += lthlb
+                    if self.stdict['incrb']:
+                        end += lthrb
+                    tglist.append(string[begin: end])
+                    string = string[end:]
+                else:
+                    break
+            else:
+                break
+        return tglist
+        # print(tglist)
+
+    def _rg_num(self):
         pass
 
     def _replace(self, string, repsrc, repwith):
@@ -55,16 +94,14 @@ class Task(object):
                 string = ' '.join(tmp)
         else:
             string = string.replace(repsrc, repwith)
-
         return string
 
     def _rep(self):
         spinf = self.stdict['spinf']
         repsrc, repwith = self.stdict['repsrc'], self.stdict['repwith']
-
-        for file in self.allfiles():
-            folder = os.path.dirname(file)
-            filename, ext = os.path.splitext(os.path.basename(file))
+        for fullpath in self._allfiles():
+            folder = os.path.dirname(fullpath)
+            filename, ext = os.path.splitext(os.path.basename(fullpath))
             if spinf == '不含扩展名':
                 if filename:
                     filename = self._replace(filename, repsrc, repwith)
@@ -76,36 +113,75 @@ class Task(object):
                     filename = self._replace(filename, repsrc, repwith)
                 if ext:
                     ext = '.' + self._replace(ext[1:], repsrc, repwith)
-
-            if len(filename):
-                self.succesdict[file] = os.path.join(folder, filename + ext)
+            fullpath_new = os.path.join(folder, filename + ext)
+            if len(filename) and (len(fullpath_new) in range(1, self.MAXLENGTH)):
+                if fullpath != fullpath_new:
+                    self.successful[fullpath] = fullpath_new
+                else:
+                    self.unchanged.append(fullpath)
             else:
-                self.faileddict[file] = os.path.join(folder, filename + ext)
-        print(self.succesdict)
+                self.failed[fullpath] = fullpath_new
 
     def _rrep(self):
-        pass
+        spinf, rrepwith = self.stdict['spinf'], self.stdict['rrepwith']
+        rreplb, rreprb = self.stdict['rreplb'], self.stdict['rreprb']
+        for fullpath in self._allfiles():
+            folder = os.path.dirname(fullpath)
+            filename, ext = os.path.splitext(os.path.basename(fullpath))
+            if spinf == '不含扩展名':
+                if filename:
+                    srcs = self._rg_str(filename, rreplb, rreprb)
+                    for i in srcs:
+                        filename = self._replace(filename, i, rrepwith)
+            elif spinf == '仅限扩展名':
+                if ext:
+                    srcs = self._rg_str(ext[1:], rreplb, rreprb)
+                    for i in srcs:
+                        ext = self._replace(ext, i, rrepwith)
+                    ext = '.' + ext
+            elif spinf == '整个文件名':
+                if filename:
+                    srcs = self._rg_str(filename, rreplb, rreprb)
+                    for i in srcs:
+                        filename = self._replace(filename, i, rrepwith)
+                if ext:
+                    srcs = self._rg_str(ext[1:], rreplb, rreprb)
+                    for i in srcs:
+                        ext = self._replace(ext, i, rrepwith)
+                    ext = '.' + ext
+            fullpath_new = os.path.join(folder, filename + ext)
+            if len(filename) and (len(fullpath_new) in range(1, self.MAXLENGTH)):
+                if fullpath != fullpath_new:
+                    self.successful[fullpath] = fullpath_new
+                else:
+                    self.unchanged.append(fullpath)
+            else:
+                self.failed[fullpath] = fullpath_new
 
     def _ins(self):
         pass
 
     def preview(self):
-        if not self.flag_preview:
+        if not self._PREVIEWED:
             if self.stdict['head'] == 'rep':
                 self._rep()
             elif self.stdict['head'] == 'rrep':
                 self._rrep()
             elif self.stdict['head'] == 'insert':
                 self._ins()
-            self.flag_preview = True
-        return self.succesdict, self.faileddict
+            self._PREVIEWED = True
+        return self.successful, self.failed, self.unchanged
 
     def start(self):
-        if not self.flag_preview:
+        if not self._PREVIEWED:
             self.preview()
-        self._rename(self.succesdict)
-        return self.succesdict, self.faileddict
+        if not self._RENAMED:
+            self._rename(self.successful)
+        return self.successful, self.failed, self.unchanged
 
 
 if __name__ == '__main__':
     exit(0)
+    # self = Task("test",r'D:\zz_Python\testarea',{'inclb':True,'incrb':True})
+    # for i in os.listdir(r'D:\zz_Python\testarea'):
+    #     self._rg_str(i[:-4],"6","5")
