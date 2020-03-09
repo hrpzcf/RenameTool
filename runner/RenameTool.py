@@ -40,8 +40,10 @@ class RenameTool(QMW, RTUI):
                 exit(1)
         self._sfpath = os.path.join(dirsettings, 'settings.bin')
         self._rulespath = os.path.join(dirsettings, 'rules.bin')
-        self.defaultdir = '.'
-        self.tasklist, self.packetlist = [], []
+        self._defaultdir = '.'
+        self._task_current = None
+        self._tasklist = list()
+        self._packetlist = list()
         self._connect()
         self._loadsettings()
         self._loadruleslist()
@@ -79,7 +81,7 @@ class RenameTool(QMW, RTUI):
         self.btn_setrule_clear.clicked.connect(self.clearstate)
         self.btn_RL_AddToTaskList.clicked.connect(self._addtotasklist)
         self.comboBox_InsertWith.currentIndexChanged.connect(self._setform)
-        self.btn_RL_ClearAll.clicked.connect(self.rl_clear)
+        self.btn_RL_ClearAll.clicked.connect(self._rl_clear)
         self.btn_SetDefaultDir.clicked.connect(self.setdefaultdir)
         self.btn_CTGPath.clicked.connect(self._dptarget)
         self.btn_TS_MoveUp.clicked.connect(self._taskmoveup)
@@ -144,7 +146,7 @@ class RenameTool(QMW, RTUI):
             with open(self._sfpath, 'rb') as sf:
                 settings = pickle.load(sf)
             # 临时添加读取默认目标文件夹设置:)
-            self.defaultdir = settings['defaultdir']
+            self._defaultdir = settings['defaultdir']
             # 恢复各控件状态
             self._setsettingstate(settings)
         except Exception as err:
@@ -156,7 +158,7 @@ class RenameTool(QMW, RTUI):
         # state：字典，各控件状态
         state = self._getsettingstate()
         # 临时添加保存默认目标文件夹路径:)
-        state['defaultdir'] = self.defaultdir
+        state['defaultdir'] = self._defaultdir
         try:
             with open(self._sfpath, 'wb') as sf:
                 pickle.dump(state, sf)
@@ -252,7 +254,7 @@ class RenameTool(QMW, RTUI):
             self.lineEdit_RepSrc.setFocus()
             return False
         state['repwith'] = self.lineEdit_RepWith.text()
-        self.packetlist.append(state)
+        self._packetlist.append(state)
         return True
 
     def _set_rep(self, state):
@@ -283,7 +285,7 @@ class RenameTool(QMW, RTUI):
         state['rreplb'] = rreplb
         state['rreprb'] = rreprb
         state['rrepwith'] = rrepwith
-        self.packetlist.append(state)
+        self._packetlist.append(state)
         return True
 
     def _set_rrep(self, state):
@@ -330,7 +332,7 @@ class RenameTool(QMW, RTUI):
             except:
                 self.settip('文本插入绝对位置输入有误，请重新输入！')
                 return False
-        self.packetlist.append(state)
+        self._packetlist.append(state)
         return True
 
     def _set_insert(self, state):
@@ -387,7 +389,7 @@ class RenameTool(QMW, RTUI):
         ''' 保存规则列表到文件。'''
         try:
             with open(self._rulespath, 'wb') as rsl:
-                pickle.dump(self.packetlist, rsl)
+                pickle.dump(self._packetlist, rsl)
         except Exception as err:
             self.settip('规则列表保存出错:' + str(err))
 
@@ -396,7 +398,7 @@ class RenameTool(QMW, RTUI):
         if os.path.exists(self._rulespath):
             try:
                 with open(self._rulespath, 'rb') as rsl:
-                    self.packetlist = pickle.load(rsl)
+                    self._packetlist = pickle.load(rsl)
             except Exception as err:
                 self.settip('规则列表载入错误:' + str(err))
                 return False
@@ -405,11 +407,11 @@ class RenameTool(QMW, RTUI):
     def ruleslistupdate(self, ind=None):
         ''' 更新规则列表，每次更新都会把规则列表写入文件并保存。'''
         self.list_RulesList.clear()
-        lth = len(self.packetlist)
+        lth = len(self._packetlist)
         wid = len(str(lth)) + 1
         for i in range(lth):
             self.list_RulesList.addItem(
-                self._pktitle(self.packetlist[i], str(i + 1) + '.', wid))
+                self._pktitle(self._packetlist[i], str(i + 1) + '.', wid))
         if ind == None:
             if (lth - 1) >= 0:
                 self.list_RulesList.setCurrentRow(lth - 1)
@@ -420,7 +422,7 @@ class RenameTool(QMW, RTUI):
     def tasklistupdate(self):
         ''' 更新任务列表。'''
         self.list_Tasks.clear()
-        for i in self.tasklist:
+        for i in self._tasklist:
             self.list_Tasks.addItem(i.title)
 
     def setdefaultdir(self):
@@ -429,13 +431,13 @@ class RenameTool(QMW, RTUI):
         if not dfdir:
             self.settip('未设置默认起始路径。')
             return False
-        self.defaultdir = dfdir
+        self._defaultdir = dfdir
         self._savesettings()
         self.settip('默认起始路径设置成功。')
 
     def _selectdir(self):
         ''' 弹出选择文件夹对话框并返回选择值。'''
-        folderpath = QFD.getExistingDirectory(self, '选择目标文件夹', self.defaultdir)
+        folderpath = QFD.getExistingDirectory(self, '选择目标文件夹', self._defaultdir)
         if folderpath:
             return os.path.realpath(folderpath)
         return folderpath
@@ -444,14 +446,14 @@ class RenameTool(QMW, RTUI):
         ''' 获取规则当前选中的项，根据索引删除packetlist相应项并更新列表显示,返回删除的项。'''
         self.settip()
         ind = self.list_RulesList.currentRow()
-        lth = len(self.packetlist)
+        lth = len(self._packetlist)
         if ind == -1:
             if not lth:
                 self.settip('规则列表为空！')
             else:
                 self.settip('还未选中任何规则！')
             return False
-        curit = self.packetlist.pop(ind)
+        curit = self._packetlist.pop(ind)
         # 以下左ind是删除其中一项后要选中的项，如果右ind大于0就选中前面一项，小于等于0时：lth不为空就选中第0项，为空就不选中
         ind = (ind - 1) if (ind > 0) else (0 if lth > 0 else None)
         self.ruleslistupdate(ind)
@@ -464,15 +466,15 @@ class RenameTool(QMW, RTUI):
         self._setstate(curit)
         return True
 
-    def rl_clear(self):
+    def _rl_clear(self):
         ''' 清空规则列表。'''
-        self.packetlist.clear()
+        self._packetlist.clear()
         self.ruleslistupdate()
 
     def _addtotasklist(self):
         ind = self.list_RulesList.currentRow()
         if ind == -1:
-            if not len(self.packetlist):
+            if not len(self._packetlist):
                 self.settip('规则列表为空！')
             else:
                 self.settip('还未选中任何规则！')
@@ -484,8 +486,8 @@ class RenameTool(QMW, RTUI):
             self.settip('未选择目标文件夹。')
             return False
         self.settip()
-        pkdic = deepcopy(self.packetlist[ind])
-        self.tasklist.append(
+        pkdic = deepcopy(self._packetlist[ind])
+        self._tasklist.append(
             Task(self._pktitle(pkdic), os.path.realpath(dirpath), pkdic)
         )
         self.tasklistupdate()
@@ -505,7 +507,7 @@ class RenameTool(QMW, RTUI):
         ind = self.list_Tasks.currentRow()
         if ind < 1:
             return False
-        self.tasklist[ind - 1], self.tasklist[ind] = self.tasklist[ind], self.tasklist[ind - 1]
+        self._tasklist[ind - 1], self._tasklist[ind] = self._tasklist[ind], self._tasklist[ind - 1]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind - 1)
         return True
@@ -513,16 +515,16 @@ class RenameTool(QMW, RTUI):
     def _taskmovedown(self):
         ''' 把选中任务往下移。'''
         ind = self.list_Tasks.currentRow()
-        if (ind == -1) or (ind >= len(self.tasklist) - 1):
+        if (ind == -1) or (ind >= len(self._tasklist) - 1):
             return False
-        self.tasklist[ind], self.tasklist[ind + 1] = self.tasklist[ind + 1], self.tasklist[ind]
+        self._tasklist[ind], self._tasklist[ind + 1] = self._tasklist[ind + 1], self._tasklist[ind]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind + 1)
         return True
 
     def _taskclear(self):
         ''' 清空任务列表。'''
-        self.tasklist.clear()
+        self._tasklist.clear()
         self.tasklistupdate()
 
     def _taskdelselected(self):
@@ -530,7 +532,7 @@ class RenameTool(QMW, RTUI):
         ind = self.list_Tasks.currentRow()
         if ind == -1:
             return False
-        self.tasklist.pop(ind)
+        self._tasklist.pop(ind)
         self.tasklistupdate()
         return True
 
@@ -538,21 +540,22 @@ class RenameTool(QMW, RTUI):
         ''' 预览任务执行结果并让用户决定是否执行。'''
         self.settip()
         if (ind := self.list_Tasks.currentRow()) != -1:
-            successful, failed, unchanged = self.tasklist[ind].preview()
-            successful = ''.join(
-                [f'原文件名：{key}\n重命名为：{val}\n{"*" * 100}\n' for key, val in successful.items()])
+            self._task_current = self._tasklist[ind]
+            successful, failed, unchanged = self._task_current.preview()
             unchanged = ''.join(
                 [f'文件名：{i}\n{"*" * 100}\n' for i in unchanged])
             failed = ''.join(
                 [f'原文件名：{key}\n重命名为：{val}\n{"*" * 100}\n' for key, val in failed.items()])
+            successful = ''.join(
+                [f'原文件名：{key}\n重命名为：{val}\n{"*" * 100}\n' for key, val in successful.items()])
             PrevWindow.textEdit.setText(successful)
             PrevWindow.show()
         else:
             self.settip('没有选中任何任务！')
-        self.rename_dict = successful
 
     def _dorename(self):
-        print('renaming')
+        if self._task_current != None:
+            self._task_current._rename()
 
 
 class Preview(QMW, PUI):

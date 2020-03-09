@@ -38,8 +38,9 @@ class Task(object):
                     fplst.append(os.path.join(root, i))
         return fplst
 
-    def _rename(self, lst):
+    def _rename(self):
         self._RENAMED = True
+        print('renamed!')
 
     def _rg_str(self, string, rreplb, rreprb):
         ''' 寻找符合给定范围的字符串(从左至右一次匹配，不是最短匹配，也不是最长匹配)，并返回找到的字符串列表 '''
@@ -76,6 +77,7 @@ class Task(object):
         return tglist
 
     def _rg_num(self):
+        ''' 空函数。'''
         pass
 
     def _replace(self, string, repsrc, repwith):
@@ -120,8 +122,8 @@ class Task(object):
                 self.failed[fullpath] = fullpath_new
 
     def _rrep(self):
-        spinf, rrepwith = self.stdict['spinf'], self.stdict['rrepwith']
         rreplb, rreprb = self.stdict['rreplb'], self.stdict['rreprb']
+        spinf, rrepwith = self.stdict['spinf'], self.stdict['rrepwith']
         for fullpath in self._allfiles():
             folder = os.path.dirname(fullpath)
             filename, ext = os.path.splitext(os.path.basename(fullpath))
