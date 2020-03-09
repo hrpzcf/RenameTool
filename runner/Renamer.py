@@ -1,7 +1,7 @@
 # coding:utf-8
 
 # 版本：0.0.1
-# 功能：RnameTool的执行模块。
+# 功能：RnameTool的任务模块。
 # 作者：hrp
 
 import os
@@ -42,9 +42,7 @@ class Task(object):
         self._RENAMED = True
 
     def _rg_str(self, string, rreplb, rreprb):
-        ''' 寻找符合给定范围的字符串(从左至右一次匹配，不是最短匹配，也不是最长匹配)，并返回找到的字符串列表
-            1.不会用正则表达式
-        '''
+        ''' 寻找符合给定范围的字符串(从左至右一次匹配，不是最短匹配，也不是最长匹配)，并返回找到的字符串列表 '''
         tglist = list()
         lthlb, lthrb = len(rreplb), len(rreprb)
         while (lth := len(string)):
@@ -76,7 +74,6 @@ class Task(object):
             else:
                 break
         return tglist
-        # print(tglist)
 
     def _rg_num(self):
         pass

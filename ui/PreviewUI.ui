@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>800</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,8 +22,8 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>641</width>
-      <height>481</height>
+      <width>801</width>
+      <height>501</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout" stretch="94,6">
@@ -68,7 +68,7 @@
         <number>2</number>
        </property>
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btn_confirm">
          <property name="palette">
           <palette>
            <active>
@@ -110,17 +110,17 @@
           <font>
            <family>Microsoft YaHei UI</family>
            <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
-          <string>执行</string>
+          <string>重命名</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_2">
+        <widget class="QPushButton" name="btn_cancel">
          <property name="font">
           <font>
            <family>Microsoft YaHei UI</family>

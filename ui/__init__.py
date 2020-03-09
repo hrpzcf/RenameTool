@@ -1,1 +1,1 @@
-''' RnameTool的UI模块。'''
+# RnameTool的UI模块。

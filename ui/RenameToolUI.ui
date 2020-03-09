@@ -11,11 +11,48 @@
     <height>595</height>
    </rect>
   </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>240</red>
+        <green>240</green>
+        <blue>240</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>240</red>
+        <green>240</green>
+        <blue>240</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
+  </property>
   <property name="focusPolicy">
    <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>简易批量重命名工具 v0.0.1</string>
+   <string>批量重命名工具 ver.0.0.1 alpha</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QGroupBox" name="groupBox_RuleList">
@@ -43,6 +80,13 @@
        <width>421</width>
        <height>161</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>楷体</family>
+       <pointsize>10</pointsize>
+       <underline>false</underline>
+      </font>
      </property>
      <property name="toolTip">
       <string>用户创建的重命名规则列表，同一规则可以同时与不同文件夹组合加入任务列表，或同一文件夹可以每次组合不同规则。软件关闭后规则列表不会丢失。</string>
@@ -515,7 +559,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>填写想要用来确定左边界的字符串(字符串越长匹配越精确)，左边界可以留空，留空时左边界默认为文件名最前端。</string>
+        <string>填写想要用来确定左边界的字符串(字符串越长匹配越准确)，左边界可以留空，留空时左边界默认为文件名最前端。</string>
        </property>
        <property name="maxLength">
         <number>255</number>
@@ -593,7 +637,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>填写想要用来确定右边界的字符串(字符串越长匹配越精确)，右边界可以留空，留空时右边界默认为文件名末尾(默认不含扩展名)。</string>
+        <string>填写想要用来确定右边界的字符串(字符串越长匹配越准确)，右边界可以留空，留空时右边界默认为文件名末尾(默认不含扩展名)。</string>
        </property>
        <property name="maxLength">
         <number>255</number>

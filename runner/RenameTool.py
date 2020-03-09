@@ -28,36 +28,45 @@ class RenameTool(QMW, RTUI):
         self.setupUi(self)
         self.setFixedSize(901, 594)
         # 设置文件的路径和规则列表的保存路径以及目标文件夹默认路径
-        self._sfpath = os.path.join(sys.path[0], 'settings', 'settings.bin')
-        self._rulespath = os.path.join(sys.path[0], 'settings', 'rules.bin')
+        dirsettings = os.path.join(sys.path[0], 'settings')
+        dirlogs = os.path.join(sys.path[0], 'logs')
+        for dirs in (dirsettings, dirlogs):
+            if not os.path.exists(dirs):
+                try:
+                    os.mkdir(dirs)
+                except:
+                    exit(1)
+            elif not os.path.isdir(dirs):
+                exit(1)
+        self._sfpath = os.path.join(dirsettings, 'settings.bin')
+        self._rulespath = os.path.join(dirsettings, 'rules.bin')
         self.defaultdir = '.'
         self.tasklist, self.packetlist = [], []
         self._connect()
         self._loadsettings()
         self._loadruleslist()
-        # self.settip('将鼠标停留在相应位置可查看说明。')
 
     def _connect(self):
-        ''' 统一绑定各种控件到相应函数
-            checkBox_Word：       单词模式
-            checkBox_IncludeLB：  包含左边界
-            checkBox_IncludeRB：  包含右边界
-            comboBox_OOEExt：     限定或排除指定扩展名
-            comboBox_SpInf：      作用范围是否包含扩展名
-            btn_SaveToList：      保存到列表
-            btn_RL_DelSelected：  规则列表的删除选中项按钮
-            btn_RL_EditSelected： 规则列表中的编辑选中项按钮
-            btn_RL_AddToTaskList：“加入待执行”按钮
-            comboBox_InsertWith： “插入”下拉单选框
-            comboBox_InsertPos：  “插入位置”下拉单选框
-            btn_RL_ClearRules：   规则列表的清空按钮
-            btn_SetDefaultDir：   “设置默认目标文件”夹按钮
-            btn_CTGPath：         规则列表中的“...”按钮
-            btn_TS_MoveUp：       任务列表的“上移”按钮
-            btn_TS_MoveDown：     任务列表的“下移”按钮
-            btn_TS_Clear：        任务列表的“清空”按钮
-            btn_TS_DelSelected：  任务列表的“移除”按钮
-            btn_TS_PrevNRun：     任务列表的“预览/执行”按钮
+        ''' 统一绑定各种控件信号与槽函数。
+             1.checkBox_Word：       单词模式
+             2.checkBox_IncludeLB：  包含左边界
+             3.checkBox_IncludeRB：  包含右边界
+             4.comboBox_OOEExt：     限定或排除指定扩展名
+             5.comboBox_SpInf：      作用范围是否包含扩展名
+             6.btn_SaveToList：      保存到列表
+             7.btn_RL_DelSelected：  规则列表的删除选中项按钮
+             8.btn_RL_EditSelected： 规则列表中的编辑选中项按钮
+             9.btn_RL_AddToTaskList：“加入待执行”按钮
+            10.comboBox_InsertWith： “插入”下拉单选框
+            11.comboBox_InsertPos：  “插入位置”下拉单选框
+            12.btn_RL_ClearRules：   规则列表的清空按钮
+            13.btn_SetDefaultDir：   “设置默认目标文件”夹按钮
+            14.btn_CTGPath：         规则列表中的“...”按钮
+            15.btn_TS_MoveUp：       任务列表的“上移”按钮
+            16.btn_TS_MoveDown：     任务列表的“下移”按钮
+            17.btn_TS_Clear：        任务列表的“清空”按钮
+            18.btn_TS_DelSelected：  任务列表的“移除”按钮
+            19.btn_TS_PrevNRun：     任务列表的“预览/执行”按钮
         '''
         self.checkBox_Word.clicked.connect(self._savesettings)
         self.checkBox_IncludeLB.clicked.connect(self._savesettings)
@@ -77,17 +86,17 @@ class RenameTool(QMW, RTUI):
         self.btn_TS_MoveDown.clicked.connect(self._taskmovedown)
         self.btn_TS_Clear.clicked.connect(self._taskclear)
         self.btn_TS_DelSelected.clicked.connect(self._taskdelselected)
-        self.btn_TS_PrevNRun.clicked.connect(self._taskprevrun)
+        self.btn_TS_PrevNRun.clicked.connect(self._taskpreview)
 
     def _getsettingstate(self):
-        ''' 获取需要作为设置来保存状态的控件状态
+        ''' 获取需要作为设置来保存状态的控件状态。
             获取的控件状态依次为：
                 1.限定扩展名或排除扩展名选择框
                 2.单词模式
                 3.作用范围是否包含扩展名
                 4.范围替换中的是否包含左边界
                 3.范围替换中的是否包含右边界
-            返回值state：字典
+            返回值state：字典。
         '''
         state = dict()
         state['comboBox_inexcext'] = self.comboBox_InExcExt.currentText()
@@ -98,14 +107,14 @@ class RenameTool(QMW, RTUI):
         return state
 
     def _setsettingstate(self, state):
-        ''' 把从设置中读取的控件状态恢复到相应控件上
-            参数state：字典，各控件状态值
+        ''' 把从设置中读取的控件状态恢复到相应控件上。
+            参数state：字典，各控件状态值。
             依次为：
-                1.限定扩展名或排除扩展名选择框
-                2.单词模式
-                3.作用范围是否包含扩展名
-                4.范围替换中的是否包含左边界
-                3.范围替换中的是否包含右边界
+                1.限定扩展名或排除扩展名选择框；
+                2.单词模式；
+                3.作用范围是否包含扩展名；
+                4.范围替换中的是否包含左边界；
+                3.范围替换中的是否包含右边界。
         '''
         self.comboBox_InExcExt.setCurrentText(state['comboBox_inexcext'])
         self.checkBox_Word.setChecked(state['checkBox_word'])
@@ -114,8 +123,8 @@ class RenameTool(QMW, RTUI):
         self.checkBox_IncludeRB.setChecked(state['checkBox_incrb'])
 
     def settip(self, msg=None):
-        ''' 状态栏提示信息
-            参数msg：要显示的字符串
+        ''' 状态栏提示信息。
+            参数msg：要显示的字符串。
         '''
         if msg:
             self.statusBar.showMessage(msg)
@@ -123,14 +132,14 @@ class RenameTool(QMW, RTUI):
             self.statusBar.showMessage(' ')
 
     def _setform(self):
-        ''' 设置“插入”标签页的文本框预设内容'''
+        ''' 设置“插入”标签页的文本框预设内容。'''
         if self.comboBox_InsertWith.currentIndex() == 0:
             self.lineEdit_InsertForm.setText('[%Y %m %d %H:%M]')
         else:
             self.lineEdit_InsertForm.clear()
 
     def _loadsettings(self):
-        '''程序运行时从文件加载上次储存的控件状态并恢复'''
+        ''' 程序运行时从文件加载上次储存的控件状态并恢复。'''
         try:
             with open(self._sfpath, 'rb') as sf:
                 settings = pickle.load(sf)
@@ -143,7 +152,7 @@ class RenameTool(QMW, RTUI):
             self.settip('设置加载出错:' + str(err))
 
     def _savesettings(self):
-        ''' 设置改变时保存控件状态到文件'''
+        ''' 设置改变时保存控件状态到文件。'''
         # state：字典，各控件状态
         state = self._getsettingstate()
         # 临时添加保存默认目标文件夹路径:)
@@ -155,7 +164,7 @@ class RenameTool(QMW, RTUI):
             self.settip('设置保存出错:' + str(err))
 
     def _pktitle(self, pk, num='', wid=0):
-        ''' 生成数据包(规则)的标题,用于显示在list_RulesList即规则列表中'''
+        ''' 生成数据包(规则)的标题,用于显示在list_RulesList即规则列表中。'''
         if pk['head'] == 'rep':
             repsrc = pk['repsrc']
             if not (repwith := pk['repwith']):
@@ -194,7 +203,7 @@ class RenameTool(QMW, RTUI):
         return title
 
     def _getcommon(self):
-        ''' 获取“设定规则”分组内除了 tabview 以外的其他控件的数据(替换、范围替换、插入三个规则类型都共用的控件)'''
+        ''' 获取“设定规则”分组内除了 tabview 以外的其他控件的数据(替换、范围替换、插入三个规则类型都共用的控件)。'''
         state = dict()
         # 排除的文件夹，简单处理用户输入的文本，提取有效路径
         excfd = [
@@ -214,7 +223,7 @@ class RenameTool(QMW, RTUI):
         return state
 
     def _setcommon(self, state):
-        ''' 设置“设定规则”分组内除了 tabview 以外的其他控件的数据(替换、范围替换、插入三个规则类型都共用的控件)'''
+        ''' 设置“设定规则”分组内除了 tabview 以外的其他控件的数据(替换、范围替换、插入三个规则类型都共用的控件)。'''
         # 首先是排除的文件夹列表文本框，excfd是list
         if state['excfd']:
             self.plainText_ExcludeFolder.setPlainText('\n'.join(state['excfd']))
@@ -233,7 +242,7 @@ class RenameTool(QMW, RTUI):
         self.comboBox_SpInf.setCurrentText(state['spinf'])
 
     def get_rep(self):
-        ''' 获取“替换”标签页下的用户输入数据'''
+        ''' 获取“替换”标签页下的用户输入数据。'''
         self.settip()
         state = self._getcommon()
         state['head'] = 'rep'
@@ -247,7 +256,7 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _set_rep(self, state):
-        ''' 设置“替换”中各控件的状态'''
+        ''' 设置“替换”中各控件的状态。'''
         self._setcommon(state)
         if state['repsrc']:
             self.lineEdit_RepSrc.setText(state['repsrc'])
@@ -259,7 +268,7 @@ class RenameTool(QMW, RTUI):
             self.lineEdit_RepWith.clear()
 
     def get_rrep(self):
-        ''' 获取“范围替换”标签页下的用户输入数据'''
+        ''' 获取“范围替换”标签页下的用户输入数据。'''
         self.settip()
         state = self._getcommon()
         state['head'] = 'rrep'
@@ -278,7 +287,7 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _set_rrep(self, state):
-        ''' 设置“范围替换”中各控件状态'''
+        ''' 设置“范围替换”中各控件状态。'''
         self._setcommon(state)
         if state['rreplb']:
             self.lineEdit_RRepLB.setText(state['rreplb'])
@@ -296,7 +305,7 @@ class RenameTool(QMW, RTUI):
             self.lineEdit_RRepWith.clear()
 
     def get_insert(self):
-        ''' 获取“插入”标签页下的用户输入数据'''
+        ''' 获取“插入”标签页下的用户输入数据。'''
         self.settip()
         state = self._getcommon()
         state['head'] = 'insert'
@@ -325,7 +334,7 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _set_insert(self, state):
-        ''' 设置“插入”中各控件状态'''
+        ''' 设置“插入”中各控件状态。'''
         self._setcommon(state)
         self.comboBox_InsertWith.setCurrentText(state['insertwith'])
         if state['form']:
@@ -339,14 +348,14 @@ class RenameTool(QMW, RTUI):
             self.lineEdit_InsertPos.setText(str(inspos))
 
     def _addtoruleslist(self):
-        ''' 根据tabview的标签页位置获取相应页下的用户输入数据并添加到规则列表、保存到文件'''
+        ''' 根据tabview的标签页位置获取相应页下的用户输入数据并添加到规则列表、保存到文件。'''
         funlist = [self.get_rep, self.get_insert, self.get_rrep]
         if funlist[self.tabwid.currentIndex()]():
             self.ruleslistupdate()
 
     def _setstate(self, state):
-        ''' 参数state: 字典，列表packetlist中之一(保存的各控件状态的字典)
-            根据字典中head设置控件状态
+        ''' 参数state: 字典，列表packetlist中之一(保存的各控件状态的字典)。
+            根据字典中head设置控件状态。
         '''
         if (tmp := state['head']) == 'rep':
             self.tabwid.setCurrentWidget(self.tab_Rep)
@@ -359,7 +368,7 @@ class RenameTool(QMW, RTUI):
             self._set_insert(state)
 
     def clearstate(self):
-        ''' 清空“设定规则”分组的所有文本输入控件的状态'''
+        ''' 清空(恢复默认)“设定规则”分组的所有文本输入控件的状态。'''
         self.settip()
         self.lineEdit_RepSrc.clear()
         self.lineEdit_RepWith.clear()
@@ -375,7 +384,7 @@ class RenameTool(QMW, RTUI):
         self.comboBox_SpInf.setCurrentIndex(0)
 
     def _saveruleslist(self):
-        ''' 保存规则列表到文件'''
+        ''' 保存规则列表到文件。'''
         try:
             with open(self._rulespath, 'wb') as rsl:
                 pickle.dump(self.packetlist, rsl)
@@ -383,7 +392,7 @@ class RenameTool(QMW, RTUI):
             self.settip('规则列表保存出错:' + str(err))
 
     def _loadruleslist(self):
-        ''' 读取保存在文件中的规则列表'''
+        ''' 读取保存在文件中的规则列表。'''
         if os.path.exists(self._rulespath):
             try:
                 with open(self._rulespath, 'rb') as rsl:
@@ -394,7 +403,7 @@ class RenameTool(QMW, RTUI):
             self.ruleslistupdate()
 
     def ruleslistupdate(self, ind=None):
-        ''' 更新规则列表，每次更新都会把规则列表写入文件并保存'''
+        ''' 更新规则列表，每次更新都会把规则列表写入文件并保存。'''
         self.list_RulesList.clear()
         lth = len(self.packetlist)
         wid = len(str(lth)) + 1
@@ -409,13 +418,13 @@ class RenameTool(QMW, RTUI):
         self._saveruleslist()
 
     def tasklistupdate(self):
-        ''' 更新任务列表'''
+        ''' 更新任务列表。'''
         self.list_Tasks.clear()
         for i in self.tasklist:
             self.list_Tasks.addItem(i.title)
 
     def setdefaultdir(self):
-        ''' 设置默认目标文件夹'''
+        ''' 设置默认起始文件夹。'''
         dfdir = self._selectdir()
         if not dfdir:
             self.settip('未设置默认起始路径。')
@@ -425,14 +434,14 @@ class RenameTool(QMW, RTUI):
         self.settip('默认起始路径设置成功。')
 
     def _selectdir(self):
-        ''' 弹出选择文件夹对话框并返回选择值'''
+        ''' 弹出选择文件夹对话框并返回选择值。'''
         folderpath = QFD.getExistingDirectory(self, '选择目标文件夹', self.defaultdir)
         if folderpath:
             return os.path.realpath(folderpath)
         return folderpath
 
     def _rl_delselected(self):
-        ''' 获取规则当前选中的项，根据索引删除packetlist相应项并更新列表显示,返回删除的项'''
+        ''' 获取规则当前选中的项，根据索引删除packetlist相应项并更新列表显示,返回删除的项。'''
         self.settip()
         ind = self.list_RulesList.currentRow()
         lth = len(self.packetlist)
@@ -449,14 +458,14 @@ class RenameTool(QMW, RTUI):
         return curit
 
     def _rl_editselected(self):
-        ''' 编辑规则列表中选中的项：删除相应项并把该项包含的状态设置到相应控件上'''
+        ''' 编辑规则列表中选中的项：删除相应项并把该项包含的状态设置到相应控件上。'''
         if not (curit := self._rl_delselected()):
             return False
         self._setstate(curit)
         return True
 
     def rl_clear(self):
-        ''' 清空规则列表'''
+        ''' 清空规则列表。'''
         self.packetlist.clear()
         self.ruleslistupdate()
 
@@ -483,7 +492,7 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _dptarget(self):
-        ''' “...”按钮选择路径并显示到“目标文件夹”后的文本框'''
+        ''' “...”按钮选择路径并显示到“目标文件夹”后的文本框。'''
         tg = self._selectdir()
         if not tg:
             self.settip('没有选择文件夹。')
@@ -492,7 +501,7 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _taskmoveup(self):
-        ''' 把选中任务往上移'''
+        ''' 把选中任务往上移。'''
         ind = self.list_Tasks.currentRow()
         if ind < 1:
             return False
@@ -502,7 +511,7 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _taskmovedown(self):
-        ''' 把选中任务往下移'''
+        ''' 把选中任务往下移。'''
         ind = self.list_Tasks.currentRow()
         if (ind == -1) or (ind >= len(self.tasklist) - 1):
             return False
@@ -512,12 +521,12 @@ class RenameTool(QMW, RTUI):
         return True
 
     def _taskclear(self):
-        ''' 清空任务列表'''
+        ''' 清空任务列表。'''
         self.tasklist.clear()
         self.tasklistupdate()
 
     def _taskdelselected(self):
-        ''' 删除选中任务'''
+        ''' 删除选中任务。'''
         ind = self.list_Tasks.currentRow()
         if ind == -1:
             return False
@@ -525,28 +534,45 @@ class RenameTool(QMW, RTUI):
         self.tasklistupdate()
         return True
 
-    def _taskprevrun(self):
-        ''' 预览任务执行结果并让用户决定是否执行'''
+    def _taskpreview(self):
+        ''' 预览任务执行结果并让用户决定是否执行。'''
+        self.settip()
         if (ind := self.list_Tasks.currentRow()) != -1:
             successful, failed, unchanged = self.tasklist[ind].preview()
+            successful = ''.join(
+                [f'原文件名：{key}\n重命名为：{val}\n{"*" * 100}\n' for key, val in successful.items()])
             unchanged = ''.join(
                 [f'文件名：{i}\n{"*" * 100}\n' for i in unchanged])
             failed = ''.join(
                 [f'原文件名：{key}\n重命名为：{val}\n{"*" * 100}\n' for key, val in failed.items()])
-            successful = ''.join(
-                [f'原文件名：{key}\n重命名为：{val}\n{"*" * 100}\n' for key, val in successful.items()])
-            prevwindow.textEdit.setText(successful)
-            prevwindow.show()
+            PrevWindow.textEdit.setText(successful)
+            PrevWindow.show()
+        else:
+            self.settip('没有选中任何任务！')
+        self.rename_dict = successful
+
+    def _dorename(self):
+        print('renaming')
+
 
 class Preview(QMW, PUI):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+        self.btn_cancel.clicked.connect(self._cancel)
+        self.btn_confirm.clicked.connect(self._confirm)
+
+    def _cancel(self):
+        self.close()
+
+    def _confirm(self):
+        self.btn_confirm.setEnabled(False)
+        MainWindow._dorename()
 
 
 if __name__ == '__main__':
     app = QAPP(sys.argv)
-    mainwindow = RenameTool()
-    prevwindow = Preview()
-    mainwindow.show()
+    MainWindow = RenameTool()
+    PrevWindow = Preview()
+    MainWindow.show()
     sys.exit(app.exec_())
