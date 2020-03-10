@@ -9,13 +9,11 @@ from time import localtime, strftime
 
 
 class Task(object):
-    # UNUSABLE = r"\/?:*'><|"
-
     def __init__(self, title, target, statedict):
-        self.MAXLENGTH = 255
+        self.MAXLENGTH = 256
         self.target = target
         self.stdict = statedict
-        self.title = f'目标：{target}\n{title}\n{"-" * 42}'
+        self.title = f'目标：< {target} >\n{title}\n{"-" * 50}'
         self.successful, self.failed, self.unchanged = dict(), dict(), list()
         self._PREVIEWED, self._RENAMED = False, False
 
@@ -49,31 +47,23 @@ class Task(object):
         while (lth := len(string)):
             begin, end = None, None
             if rreplb:
-                if (tmp := string.find(rreplb)) != -1:
-                    begin = tmp
-                else:
+                if (tmp := string.find(rreplb)) == -1:
                     break
+                begin = tmp
             else:
                 begin = 0
-            if begin is not None:
-                if rreprb:
-                    if (tmp := string[begin + lthlb:].find(rreprb)) != -1:
-                        end = begin + tmp + lthlb
-                    else:
-                        break
-                else:
-                    end = lth
-                if end is not None:
-                    if not self.stdict['inclb']:
-                        begin += lthlb
-                    if self.stdict['incrb']:
-                        end += lthrb
-                    tglist.append(string[begin: end])
-                    string = string[end:]
-                else:
-                    break
-            else:
+            if begin is None:
                 break
+            if rreprb:
+                if (tmp := string[begin + lthlb:].find(rreprb)) == -1:
+                    break
+                end = begin + lthlb + tmp + lthrb
+            else:
+                end = lth
+            if end is None:
+                break
+            tglist.append(string[begin: end])
+            string = string[end:]
         return tglist
 
     def _rg_num(self):
@@ -124,6 +114,10 @@ class Task(object):
     def _rrep(self):
         rreplb, rreprb = self.stdict['rreplb'], self.stdict['rreprb']
         spinf, rrepwith = self.stdict['spinf'], self.stdict['rrepwith']
+        if not self.stdict['inclb']:
+            rrepwith = rreplb + rrepwith
+        if not self.stdict['incrb']:
+            rrepwith += rreprb
         for fullpath in self._allfiles():
             folder = os.path.dirname(fullpath)
             filename, ext = os.path.splitext(os.path.basename(fullpath))
@@ -175,7 +169,7 @@ class Task(object):
         if not self._PREVIEWED:
             self.preview()
         if not self._RENAMED:
-            self._rename(self.successful)
+            self._rename()
         return self.successful, self.failed, self.unchanged
 
 

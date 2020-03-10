@@ -10,8 +10,8 @@ import sys
 filepath = os.path.dirname(os.path.realpath(__file__))
 sys.path = [os.path.dirname(filepath)] + sys.path
 
-from copy import deepcopy
 import pickle
+from copy import deepcopy
 from PyQt5.QtWidgets import QApplication as QAPP
 from PyQt5.QtWidgets import QFileDialog as QFD
 from PyQt5.QtWidgets import QMainWindow as QMW
@@ -22,15 +22,13 @@ from ui.PreviewUI import Ui_PreviewUI as PUI
 
 class RenameTool(QMW, RTUI):
     ''' RnameTool的主模块'''
+    UNUSABLE = r"\/?:*'><|"
 
     def __init__(self):
-        super().__init__()
-        self.setupUi(self)
-        self.setFixedSize(901, 594)
-        # 设置文件的路径和规则列表的保存路径以及目标文件夹默认路径
-        dirsettings = os.path.join(sys.path[0], 'settings')
+        # 设置文件的路径和规则列表的保存路径以及目标文件夹默认路径。
         dirlogs = os.path.join(sys.path[0], 'logs')
-        for dirs in (dirsettings, dirlogs):
+        dirsets = os.path.join(sys.path[0], 'settings')
+        for dirs in (dirsets, dirlogs):
             if not os.path.exists(dirs):
                 try:
                     os.mkdir(dirs)
@@ -38,15 +36,21 @@ class RenameTool(QMW, RTUI):
                     exit(1)
             elif not os.path.isdir(dirs):
                 exit(1)
-        self._sfpath = os.path.join(dirsettings, 'settings.bin')
-        self._rulespath = os.path.join(dirsettings, 'rules.bin')
+        super().__init__()
+        self.setupUi(self)
+        self.setFixedSize(901, 594)
+        self._rulespath = os.path.join(dirsets, 'rules.bin')
+        self._setspath = os.path.join(dirsets, 'settings.bin')
         self._defaultdir = '.'
         self._task_current = None
         self._tasklist = list()
         self._packetlist = list()
+        self._settingstate = dict()
         self._connect()
         self._loadsettings()
-        self._loadruleslist()
+
+    def closeEvent(self, *args, **kwargs):
+        self._savesettings()
 
     def _connect(self):
         ''' 统一绑定各种控件信号与槽函数。
@@ -70,11 +74,11 @@ class RenameTool(QMW, RTUI):
             18.btn_TS_DelSelected：  任务列表的“移除”按钮
             19.btn_TS_PrevNRun：     任务列表的“预览/执行”按钮
         '''
-        self.checkBox_Word.clicked.connect(self._savesettings)
-        self.checkBox_IncludeLB.clicked.connect(self._savesettings)
-        self.checkBox_IncludeRB.clicked.connect(self._savesettings)
-        self.comboBox_InExcExt.currentIndexChanged.connect(self._savesettings)
-        self.comboBox_SpInf.currentIndexChanged.connect(self._savesettings)
+        self.checkBox_Word.clicked.connect(self._getsettingstate)
+        self.checkBox_IncludeLB.clicked.connect(self._getsettingstate)
+        self.checkBox_IncludeRB.clicked.connect(self._getsettingstate)
+        self.comboBox_InExcExt.currentIndexChanged.connect(self._getsettingstate)
+        self.comboBox_SpInf.currentIndexChanged.connect(self._getsettingstate)
         self.btn_SaveToList.clicked.connect(self._addtoruleslist)
         self.btn_RL_DelSelected.clicked.connect(self._rl_delselected)
         self.btn_RL_EditSelected.clicked.connect(self._rl_editselected)
@@ -91,38 +95,76 @@ class RenameTool(QMW, RTUI):
         self.btn_TS_PrevNRun.clicked.connect(self._taskpreview)
 
     def _getsettingstate(self):
-        ''' 获取需要作为设置来保存状态的控件状态。
+        ''' 获取需要保存状态的常用控件状态值。
+            _settingstate：字典，各常用控件状态值。
             获取的控件状态依次为：
-                1.限定扩展名或排除扩展名选择框
-                2.单词模式
-                3.作用范围是否包含扩展名
-                4.范围替换中的是否包含左边界
-                3.范围替换中的是否包含右边界
-            返回值state：字典。
+                1.选择目标文件夹时的默认起始路径。
+                2.限定扩展名或排除扩展名选择框；
+                3.单词模式；
+                4.作用范围是否包含扩展名；
+                5.范围替换中的是否包含左边界；
+                6.范围替换中的是否包含右边界；
         '''
-        state = dict()
-        state['comboBox_inexcext'] = self.comboBox_InExcExt.currentText()
-        state['checkBox_word'] = self.checkBox_Word.isChecked()
-        state['comboBox_spinf'] = self.comboBox_SpInf.currentText()
-        state['checkBox_inclb'] = self.checkBox_IncludeLB.isChecked()
-        state['checkBox_incrb'] = self.checkBox_IncludeRB.isChecked()
-        return state
+        self._settingstate['defaultdir'] = self._defaultdir
+        self._settingstate['comboBox_inexcext'] = self.comboBox_InExcExt.currentText()
+        self._settingstate['checkBox_word'] = self.checkBox_Word.isChecked()
+        self._settingstate['comboBox_spinf'] = self.comboBox_SpInf.currentText()
+        self._settingstate['checkBox_inclb'] = self.checkBox_IncludeLB.isChecked()
+        self._settingstate['checkBox_incrb'] = self.checkBox_IncludeRB.isChecked()
 
-    def _setsettingstate(self, state):
+    def _setsettingstate(self):
         ''' 把从设置中读取的控件状态恢复到相应控件上。
-            参数state：字典，各控件状态值。
+            _settingstate：字典，各常用控件状态值。
             依次为：
-                1.限定扩展名或排除扩展名选择框；
-                2.单词模式；
-                3.作用范围是否包含扩展名；
-                4.范围替换中的是否包含左边界；
-                3.范围替换中的是否包含右边界。
+                1.选择目标文件夹时的默认起始路径。
+                2.限定扩展名或排除扩展名选择框；
+                3.单词模式；
+                4.作用范围是否包含扩展名；
+                5.范围替换中的是否包含左边界；
+                6.范围替换中的是否包含右边界；
         '''
-        self.comboBox_InExcExt.setCurrentText(state['comboBox_inexcext'])
-        self.checkBox_Word.setChecked(state['checkBox_word'])
-        self.comboBox_SpInf.setCurrentText(state['comboBox_spinf'])
-        self.checkBox_IncludeLB.setChecked(state['checkBox_inclb'])
-        self.checkBox_IncludeRB.setChecked(state['checkBox_incrb'])
+        try:
+            self._defaultdir = self._settingstate['defaultdir']
+            self.comboBox_InExcExt.setCurrentText(self._settingstate['comboBox_inexcext'])
+            self.checkBox_Word.setChecked(self._settingstate['checkBox_word'])
+            self.comboBox_SpInf.setCurrentText(self._settingstate['comboBox_spinf'])
+            self.checkBox_IncludeLB.setChecked(self._settingstate['checkBox_inclb'])
+            self.checkBox_IncludeRB.setChecked(self._settingstate['checkBox_incrb'])
+        except:
+            pass
+
+    def _loadsettings(self):
+        ''' 程序运行时从文件加载上次储存的控件状态和规则列表并恢复、刷新。'''
+        if os.path.exists(self._setspath):
+            try:
+                with open(self._setspath, 'rb') as sf:
+                    self._settingstate = pickle.load(sf)
+                self._setsettingstate()
+            except Exception as err:
+                self.settip('设置加载出错:' + str(err))
+        # 读取规则列表并刷新。
+        if os.path.exists(self._rulespath):
+            try:
+                with open(self._rulespath, 'rb') as rsl:
+                    self._packetlist = pickle.load(rsl)
+                    self.ruleslistupdate()
+            except Exception as err:
+                self.settip('规则列表载入错误:' + str(err))
+
+    def _savesettings(self):
+        ''' 设置改变时保存控件状态到文件。'''
+        # _settingstate：字典，各常用控件状态值，详见 getsettingstate 函数。
+        try:
+            with open(self._setspath, 'wb') as sf:
+                pickle.dump(self._settingstate, sf)
+        except Exception as err:
+            self.settip('设置保存出错:' + str(err))
+        # 保存规则列表到文件。_packetlist：规则列表。
+        try:
+            with open(self._rulespath, 'wb') as rsl:
+                pickle.dump(self._packetlist, rsl)
+        except Exception as err:
+            self.settip('规则列表保存出错:' + str(err))
 
     def settip(self, msg=None):
         ''' 状态栏提示信息。
@@ -140,38 +182,13 @@ class RenameTool(QMW, RTUI):
         else:
             self.lineEdit_InsertForm.clear()
 
-    def _loadsettings(self):
-        ''' 程序运行时从文件加载上次储存的控件状态并恢复。'''
-        try:
-            with open(self._sfpath, 'rb') as sf:
-                settings = pickle.load(sf)
-            # 临时添加读取默认目标文件夹设置:)
-            self._defaultdir = settings['defaultdir']
-            # 恢复各控件状态
-            self._setsettingstate(settings)
-        except Exception as err:
-            # 简易出错提示
-            self.settip('设置加载出错:' + str(err))
-
-    def _savesettings(self):
-        ''' 设置改变时保存控件状态到文件。'''
-        # state：字典，各控件状态
-        state = self._getsettingstate()
-        # 临时添加保存默认目标文件夹路径:)
-        state['defaultdir'] = self._defaultdir
-        try:
-            with open(self._sfpath, 'wb') as sf:
-                pickle.dump(state, sf)
-        except Exception as err:
-            self.settip('设置保存出错:' + str(err))
-
     def _pktitle(self, pk, num='', wid=0):
         ''' 生成数据包(规则)的标题,用于显示在list_RulesList即规则列表中。'''
         if pk['head'] == 'rep':
             repsrc = pk['repsrc']
             if not (repwith := pk['repwith']):
                 repwith = '无'
-            title = f'{num:0>{wid}}替换：将【{repsrc}】替换成【{repwith}】+ '
+            title = f'{num:0>{wid}}替换：将 < {repsrc} > 替换成 < {repwith} >，'
         elif pk['head'] == 'rrep':
             if not (rreplb := pk['rreplb']):
                 rreplb = '无'
@@ -181,15 +198,15 @@ class RenameTool(QMW, RTUI):
             incrb = '包含' if pk['incrb'] else '不含'
             if not (rrepwith := pk['rrepwith']):
                 rrepwith = '无'
-            title = (f'{num:0>{wid}}范围：范围内字符替换成【{rrepwith}】+ '
-                     + f'左边界【{rreplb}】+ 右边界【{rreprb}】+【{inclb}】左边界 +【{incrb}】右边界 + ')
+            title = (f'{num:0>{wid}}范围：范围内字符替换成 < {rrepwith} >，'
+                     + f'左边界 < {rreplb} >，右边界 < {rreprb} >，< {inclb} > 左边界，< {incrb} > 右边界，')
         else:
             insertwith = pk['insertwith']
             form = pk['form']
             insertpos = (
                 str(pk['insertpos'])
                 if isinstance(pk['insertpos'], int) else (str(pk['insertpos'] * 100) + '%'))
-            title = (f'{num:0>{wid}}插入：插入【{insertwith}】+ 字符或格式:【{form}】+ 位置:【{insertpos}】+ ')
+            title = (f'{num:0>{wid}}插入：插入 < {insertwith} >，字符或格式: < {form} >，位置: < {insertpos} >，')
         if not (excfd := pk['excfd']):
             excfd = '无'
         else:
@@ -201,7 +218,7 @@ class RenameTool(QMW, RTUI):
             exts = ' '.join(exts)
         word = '是' if pk['word'] else '否'
         spinf = pk['spinf']
-        title += f'排除文件夹:【{excfd}】+ {inexcext}【{exts}】+ 单词模式:【{word}】+ 作用范围:【{spinf}】'
+        title += f'排除文件夹: < {excfd} >，{inexcext} < {exts} >，单词模式: < {word} >，作用范围: < {spinf} >'
         return title
 
     def _getcommon(self):
@@ -385,27 +402,8 @@ class RenameTool(QMW, RTUI):
         self.lineEdit_Exts.clear()
         self.comboBox_SpInf.setCurrentIndex(0)
 
-    def _saveruleslist(self):
-        ''' 保存规则列表到文件。'''
-        try:
-            with open(self._rulespath, 'wb') as rsl:
-                pickle.dump(self._packetlist, rsl)
-        except Exception as err:
-            self.settip('规则列表保存出错:' + str(err))
-
-    def _loadruleslist(self):
-        ''' 读取保存在文件中的规则列表。'''
-        if os.path.exists(self._rulespath):
-            try:
-                with open(self._rulespath, 'rb') as rsl:
-                    self._packetlist = pickle.load(rsl)
-            except Exception as err:
-                self.settip('规则列表载入错误:' + str(err))
-                return False
-            self.ruleslistupdate()
-
     def ruleslistupdate(self, ind=None):
-        ''' 更新规则列表，每次更新都会把规则列表写入文件并保存。'''
+        ''' 更新规则列表。'''
         self.list_RulesList.clear()
         lth = len(self._packetlist)
         wid = len(str(lth)) + 1
@@ -417,7 +415,6 @@ class RenameTool(QMW, RTUI):
                 self.list_RulesList.setCurrentRow(lth - 1)
         else:
             self.list_RulesList.setCurrentRow(ind)
-        self._saveruleslist()
 
     def tasklistupdate(self):
         ''' 更新任务列表。'''
@@ -432,7 +429,7 @@ class RenameTool(QMW, RTUI):
             self.settip('未设置默认起始路径。')
             return False
         self._defaultdir = dfdir
-        self._savesettings()
+        self._settingstate['defaultdir'] = dfdir
         self.settip('默认起始路径设置成功。')
 
     def _selectdir(self):
@@ -555,7 +552,7 @@ class RenameTool(QMW, RTUI):
 
     def _dorename(self):
         if self._task_current != None:
-            self._task_current._rename()
+            self._task_current.start()
 
 
 class Preview(QMW, PUI):

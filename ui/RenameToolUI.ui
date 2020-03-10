@@ -83,8 +83,8 @@
      </property>
      <property name="font">
       <font>
-       <family>楷体</family>
-       <pointsize>10</pointsize>
+       <family>华文细黑</family>
+       <pointsize>9</pointsize>
        <underline>false</underline>
       </font>
      </property>
@@ -228,12 +228,18 @@
        <height>231</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <family>华文细黑</family>
+       <pointsize>9</pointsize>
+      </font>
+     </property>
     </widget>
     <widget class="QPushButton" name="btn_TS_Clear">
      <property name="geometry">
       <rect>
        <x>280</x>
-       <y>140</y>
+       <y>190</y>
        <width>81</width>
        <height>28</height>
       </rect>
@@ -246,7 +252,7 @@
      <property name="geometry">
       <rect>
        <x>280</x>
-       <y>180</y>
+       <y>160</y>
        <width>81</width>
        <height>28</height>
       </rect>
@@ -272,7 +278,7 @@
      <property name="geometry">
       <rect>
        <x>280</x>
-       <y>90</y>
+       <y>80</y>
        <width>81</width>
        <height>28</height>
       </rect>
@@ -305,6 +311,22 @@
      </property>
      <property name="text">
       <string>预览/执行</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_TS_ReStore">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>120</y>
+       <width>81</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>重置状态</string>
      </property>
     </widget>
    </widget>
@@ -959,6 +981,12 @@
        <width>351</width>
        <height>161</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>华文细黑</family>
+       <pointsize>9</pointsize>
+      </font>
      </property>
     </widget>
     <widget class="QPushButton" name="btn_LNR_TryTRestore">
