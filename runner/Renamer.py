@@ -5,17 +5,22 @@
 # 作者：hrp
 
 import os
-from time import localtime, strftime
+import re
+from time import localtime
+from time import strftime
 
 
 class Task(object):
     def __init__(self, title, target, statedict):
-        self.MAXLENGTH = 256
         self.target = target
         self.stdict = statedict
         self.title = f'目标：< {target}\\ >\n{title}\n{"-" * 50}'
-        self._successful, self._failed, self._unchanged = dict(), dict(), list()
-        self._PREVIEWED, self._RENAMED = False, False
+        self._successful = dict()
+        self._failed = dict()
+        self._unchanged = list()
+        self.MAX_NAME = 256
+        self.RENAMED = False
+        self._PREVIEWED = False
 
     def _allfile(self):
         ''' 返回值是排除用户要排除的文件夹、扩展名(指定或排除)后得到的所有文件路径。'''
@@ -36,12 +41,18 @@ class Task(object):
         return fplst
 
     def _rename(self):
-        self._RENAMED = True
-        print('renamed!')
+        ''' 根据successful列表重命名文件。'''
+        for k, v in list(self._successful.items()):
+            try:
+                print(os.path.basename(k), '>>', os.path.basename(v))
+            except:
+                self._failed[k] = self._successful.pop(k)
+        self.RENAMED = True
 
     def _rng_str(self, string, rrepllb, rreplrb):
-        ''' 寻找符合给定范围的字符串(从左至右一次匹配，既不是最短匹配，也不是最长匹配)，并返回找到的字符串列表。'''
-        # 还不会用正则表达式，只能应付一下了 :)
+        ''' 寻找符合给定范围的字符串(从左至右一次匹配，既不是最短匹配，也不是最长匹配)，
+        并返回找到的字符串列表。
+        '''
         tglist, lthlb, lthrb = list(), len(rrepllb), len(rreplrb)
         while (lth := len(string)):
             begin, end = None, None
@@ -65,10 +76,10 @@ class Task(object):
             string = string[end:]
         return tglist
 
-    def _rng_pos(self):
+    def _rng_num(self):
         pass
 
-    def _repl_word(self, string, replsrc, replwith):
+    def _repl_wt_word(self, string, replsrc, replwith):
         if replsrc not in string:
             return string
         # 以空格为分隔的单词模式没那么简单，这里先应付一下。
@@ -84,9 +95,13 @@ class Task(object):
             string = string.replace(replsrc, replwith)
         return string
 
+    def _ins_with_pos(self, string, instext, pos):
+        string = string[:pos] + instext + string[pos:]
+        return string
+
     def _kill_srcs(self, string, replsrcs, replwith):
         for src in replsrcs:
-            string = self._repl_word(string, src, replwith)
+            string = self._repl_wt_word(string, src, replwith)
         return string
 
     def _repl(self):
@@ -107,10 +122,13 @@ class Task(object):
                 filename, ext = filename + ext, ''
                 filename = self._kill_srcs(filename, replsrcs, replwith)
             fullpath_new = os.path.join(folder, filename + ext)
-            # TODO win10支持只有扩展名没有前缀的文件名形式。这里需要改动。
-            if len(filename) and (len(fullpath_new) in range(1, self.MAXLENGTH)):
+            if (set(filename + ext) != '.') and (len(fullpath_new) <= self.MAX_NAME):
                 if fullpath != fullpath_new:
-                    self._successful[fullpath] = fullpath_new
+                    if (fullpath_new not in self._successful.values()
+                            and not os.path.exists(fullpath_new)):
+                        self._successful[fullpath] = fullpath_new
+                    else:
+                        self._failed[fullpath] = fullpath_new
                 else:
                     self._unchanged.append(fullpath)
             else:
@@ -144,41 +162,109 @@ class Task(object):
                 replsrcs = self._rng_str(filename, rrepllb, rreplrb)
                 filename = self._kill_srcs(filename, replsrcs, replwith)
             fullpath_new = os.path.join(folder, filename + ext)
-            # TODO win10支持只有扩展名没有前缀的文件名形式。这里需要改动。
-            if len(filename) and (len(fullpath_new) in range(1, self.MAXLENGTH)):
-                if fullpath != fullpath_new:
-                    self._successful[fullpath] = fullpath_new
+            if (set(filename + ext) != '.') and (len(fullpath_new) <= self.MAX_NAME):
+                if (fullpath != fullpath_new):
+                    if (fullpath_new not in self._successful.values()
+                            and not os.path.exists(fullpath_new)):
+                        self._successful[fullpath] = fullpath_new
+                    else:
+                        self._failed[fullpath] = fullpath_new
                 else:
                     self._unchanged.append(fullpath)
             else:
                 self._failed[fullpath] = fullpath_new
 
     def _ins(self):
-        # TODO 插入日期时间
-        insertwith, form = self.stdict['insert'], self.stdict['form']
-        insertpos, spinf = self.stdict['insertpos'], self.stdict['spinf']
+        insertwith = self.stdict['insertwith']
+        form = self.stdict['form']
+        spinf = self.stdict['spinf']
+        instance_pos = isinstance(self.stdict['insertpos'], float)
+
         if insertwith == '日期时间':
-            pass
+            str_to_ins = strftime(form, localtime())
         elif insertwith == '普通字符':
-            replwith = form
+            str_to_ins = form
         elif insertwith == '数字序号':
-            pass
+            re_sch = re.search(
+                r'%([\+\-0-9]{1,11}\.[\+\-0-9]{1,11})%', form)
+            begin, step = map(int, re_sch.group(1).split('.'))
+
         for fullpath in self._allfile():
+            if insertwith == '数字序号':
+                str_to_ins = form.replace(re_sch.group(), str(begin))
+
             folder = os.path.dirname(fullpath)
             filename, ext = os.path.splitext(os.path.basename(fullpath))
-            if spinf == '不含扩展名':
-                pass
-            elif spinf == '仅限扩展名':
-                pass
-            elif spinf == '全部：独立':
-                pass
-            elif spinf == '全部：整体':
-                pass
+            filename_length = len(filename)
+            ext_length = len(ext)
+            insertpos = self.stdict['insertpos']
 
-    def reset(self):
-        ''' 重置任务的预览和重命名状态(不还原文件名)，没什么作用。'''
-        self._RENAMED = False
-        self._PREVIEWED = False
+            if spinf == '不含扩展名':
+                if filename:
+                    if instance_pos:
+                        insertpos = int(filename_length * insertpos)
+                    if insertpos > filename_length:
+                        insertpos = filename_length
+                    filename = self._ins_with_pos(
+                        filename, str_to_ins, insertpos)
+                else:
+                    filename = str_to_ins
+
+            elif spinf == '仅限扩展名':
+                if ext:
+                    if instance_pos:
+                        insertpos = int(ext_length * insertpos) + 1
+                    if insertpos > ext_length:
+                        insertpos = ext_length
+                    ext = self._ins_with_pos(ext, str_to_ins, insertpos)
+                else:
+                    ext = str_to_ins
+
+            elif spinf == '全部：独立':
+                if filename:
+                    if instance_pos:
+                        insertpos = int(filename_length * insertpos)
+                    if insertpos > filename_length:
+                        insertpos = filename_length
+                    filename = self._ins_with_pos(
+                        filename, str_to_ins, insertpos)
+                else:
+                    filename = str_to_ins
+                if ext:
+                    if instance_pos:
+                        insertpos = int(ext_length * insertpos) + 1
+                    if insertpos > ext_length:
+                        insertpos = ext_length
+                    ext = self._ins_with_pos(ext, str_to_ins, insertpos)
+                else:
+                    ext = str_to_ins
+
+            elif spinf == '全部：整体':
+                filename, ext = filename + ext, ''
+                if filename:
+                    if instance_pos:
+                        insertpos = int(
+                            (filename_length + ext_length) * insertpos)
+                    if insertpos > (filename_length + ext_length):
+                        insertpos = filename_length + ext_length
+                    filename = self._ins_with_pos(
+                        filename, str_to_ins, insertpos)
+                else:
+                    filename = str_to_ins
+            fullpath_new = os.path.join(folder, filename + ext)
+            if (set(filename + ext) != '.') and (len(fullpath_new) <= self.MAX_NAME):
+                if fullpath_new != fullpath:
+                    if (fullpath_new not in self._successful.values()
+                            and not os.path.exists(fullpath_new)):
+                        self._successful[fullpath] = fullpath_new
+                        if insertwith == '数字序号':
+                            begin += step
+                    else:
+                        self._failed[fullpath] = fullpath_new
+                else:
+                    self._unchanged.append(fullpath)
+            else:
+                self._failed[fullpath] = fullpath_new
 
     def preview(self):
         if not self._PREVIEWED:
@@ -194,13 +280,10 @@ class Task(object):
     def start(self):
         if not self._PREVIEWED:
             self.preview()
-        if not self._RENAMED:
+        if not self.RENAMED:
             self._rename()
         return self._successful, self._failed, self._unchanged
 
 
 if __name__ == '__main__':
     exit(0)
-    # self = Task("test",r'D:\zz_Python\testarea',{'inclb':True,'incrb':True})
-    # for i in os.listdir(r'D:\zz_Python\testarea'):
-    #     self._rng_str(i[:-4],"6","5")

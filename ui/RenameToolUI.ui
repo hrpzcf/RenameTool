@@ -452,7 +452,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>必填项，多个替换源请用空格隔开，替换空格本身时，请输入 %s 替代。</string>
+        <string>必填项，多个替换源请用空格隔开，替换空格本身时，请输入 %k 替代。</string>
        </property>
        <property name="maxLength">
         <number>255</number>
@@ -479,10 +479,11 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>自定义日期时间：%y(两位数年)、%Y(年)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可自由组合，也可与其他普通字符组合。</string>
+        <string>日期时间：%Y(年)、%y(两位年)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可与普通字符自由组合。
+数字序号：格式：%起始数字.步长%，可与普通字符组合，如 %0.-1%~，则按 0~、-1~、-2~、-3~…添加序号。</string>
        </property>
        <property name="text">
-        <string>[%Y %m %d %H:%M]</string>
+        <string>[%Y-%m-%d]</string>
        </property>
        <property name="maxLength">
         <number>255</number>

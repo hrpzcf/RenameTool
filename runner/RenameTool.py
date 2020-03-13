@@ -11,6 +11,7 @@ filepath = os.path.dirname(os.path.realpath(__file__))
 sys.path = [os.path.dirname(filepath)] + sys.path
 
 import pickle
+import re
 from copy import deepcopy
 from PyQt5.QtWidgets import QApplication as QAPP
 from PyQt5.QtWidgets import QFileDialog as QFD
@@ -21,13 +22,14 @@ from ui.PreviewUI import Ui_PreviewUI as PUI
 
 
 class RenameTool(QMW, RTUI):
-    ''' RnameTool的主模块'''
+    ''' RnameTool的主模块。
+    '''
 
     def __init__(self):
         # 设置文件的路径和规则列表的保存路径以及目标文件夹默认路径。
-        dirlogs = os.path.join(sys.path[0], 'logs')
-        dirsets = os.path.join(sys.path[0], 'settings')
-        for dirs in (dirsets, dirlogs):
+        dir_logs = os.path.join(sys.path[0], 'logs')
+        dir_sets = os.path.join(sys.path[0], 'settings')
+        for dirs in (dir_sets, dir_logs):
             if not os.path.exists(dirs):
                 try:
                     os.mkdir(dirs)
@@ -38,14 +40,14 @@ class RenameTool(QMW, RTUI):
         super().__init__()
         self.setupUi(self)
         self.setFixedSize(901, 594)
-        self._rulespath = os.path.join(dirsets, 'rules.bin')
-        self._setspath = os.path.join(dirsets, 'settings.bin')
-        self._defaultdir = '.'
+        self._rulespath = os.path.join(dir_sets, 'rules.bin')
+        self._setspath = os.path.join(dir_sets, 'settings.bin')
+        self.UNUSABLE = set(r"\/?:*'><|")
         self._task_current = None
         self._tasklist = list()
         self._packetlist = list()
         self._settingstate = dict()
-        self.UNUSABLE = set(r"\/?:*'><|")
+        self._defaultdir = os.path.realpath('.')
         self._loadsettings()
         self._signal_slotfunc()
 
@@ -72,27 +74,46 @@ class RenameTool(QMW, RTUI):
             16.btn_TS_MoveDown：     任务列表的“下移”按钮
             17.btn_TS_Clear：        任务列表的“清空”按钮
             18.btn_TS_DelSelected：  任务列表的“移除”按钮
-            19.btn_TS_PrevSel：     任务列表的“预览选中”按钮
+            19.btn_TS_PrevSel：      任务列表的“预览选中”按钮
         '''
-        self.checkBox_Word.clicked.connect(self._getsettingstate)
-        self.checkBox_IncludeLB.clicked.connect(self._getsettingstate)
-        self.checkBox_IncludeRB.clicked.connect(self._getsettingstate)
-        self.comboBox_InExcExt.currentIndexChanged.connect(self._getsettingstate)
-        self.comboBox_SpInf.currentIndexChanged.connect(self._getsettingstate)
-        self.btn_SaveToList.clicked.connect(self._addtoruleslist)
-        self.btn_RL_DelSelected.clicked.connect(self._rl_delselected)
-        self.btn_RL_EditSelected.clicked.connect(self._rl_editselected)
-        self.btn_setrule_clear.clicked.connect(self.clearstate)
-        self.btn_RL_AddToTaskList.clicked.connect(self._addtotasklist)
-        self.comboBox_InsertWith.currentIndexChanged.connect(self._setform)
-        self.btn_RL_ClearAll.clicked.connect(self._rl_clear)
-        self.btn_SetDefaultDir.clicked.connect(self.setdefaultdir)
-        self.btn_CTGPath.clicked.connect(self._dptarget)
-        self.btn_TS_MoveUp.clicked.connect(self._taskmoveup)
-        self.btn_TS_MoveDown.clicked.connect(self._taskmovedown)
-        self.btn_TS_Clear.clicked.connect(self._taskclear)
-        self.btn_TS_DelSelected.clicked.connect(self._taskdelselected)
-        self.btn_TS_PrevSel.clicked.connect(self._taskpreview)
+        self.checkBox_Word.clicked.connect(
+            self._getsettingstate)
+        self.checkBox_IncludeLB.clicked.connect(
+            self._getsettingstate)
+        self.checkBox_IncludeRB.clicked.connect(
+            self._getsettingstate)
+        self.comboBox_InExcExt.currentIndexChanged.connect(
+            self._getsettingstate)
+        self.comboBox_SpInf.currentIndexChanged.connect(
+            self._getsettingstate)
+        self.btn_SaveToList.clicked.connect(
+            self._addtoruleslist)
+        self.btn_RL_DelSelected.clicked.connect(
+            self._rl_delselected)
+        self.btn_RL_EditSelected.clicked.connect(
+            self._rl_editselected)
+        self.btn_setrule_clear.clicked.connect(
+            self.clearstate)
+        self.btn_RL_AddToTaskList.clicked.connect(
+            self._addtotasklist)
+        self.comboBox_InsertWith.currentIndexChanged.connect(
+            self._setform)
+        self.btn_RL_ClearAll.clicked.connect(
+            self._rl_clear)
+        self.btn_SetDefaultDir.clicked.connect(
+            self.setdefaultdir)
+        self.btn_CTGPath.clicked.connect(
+            self._dptarget)
+        self.btn_TS_MoveUp.clicked.connect(
+            self._taskmoveup)
+        self.btn_TS_MoveDown.clicked.connect(
+            self._taskmovedown)
+        self.btn_TS_Clear.clicked.connect(
+            self._taskclear)
+        self.btn_TS_DelSelected.clicked.connect(
+            self._taskdelselected)
+        self.btn_TS_PrevSel.clicked.connect(
+            self._taskpreview)
 
     def _getsettingstate(self):
         ''' 获取需要保存状态的常用控件状态值。
@@ -106,12 +127,18 @@ class RenameTool(QMW, RTUI):
                 6.范围替换中的是否包含右边界；
                 7.目标文件夹。
         '''
-        self._settingstate['defaultdir'] = self._defaultdir
-        self._settingstate['comboBox_inexcext'] = self.comboBox_InExcExt.currentText()
-        self._settingstate['checkBox_word'] = self.checkBox_Word.isChecked()
-        self._settingstate['comboBox_spinf'] = self.comboBox_SpInf.currentText()
-        self._settingstate['checkBox_inclb'] = self.checkBox_IncludeLB.isChecked()
-        self._settingstate['checkBox_incrb'] = self.checkBox_IncludeRB.isChecked()
+        self._settingstate['defaultdir'] = \
+            self._defaultdir
+        self._settingstate['comboBox_inexcext'] = \
+            self.comboBox_InExcExt.currentText()
+        self._settingstate['checkBox_word'] = \
+            self.checkBox_Word.isChecked()
+        self._settingstate['comboBox_spinf'] = \
+            self.comboBox_SpInf.currentText()
+        self._settingstate['checkBox_inclb'] = \
+            self.checkBox_IncludeLB.isChecked()
+        self._settingstate['checkBox_incrb'] = \
+            self.checkBox_IncludeRB.isChecked()
 
     def _setsettingstate(self):
         ''' 把从设置中读取的控件状态恢复到相应控件上。
@@ -126,13 +153,20 @@ class RenameTool(QMW, RTUI):
                 7.目标文件夹。
         '''
         try:
-            self._defaultdir = self._settingstate['defaultdir']
-            self.comboBox_InExcExt.setCurrentText(self._settingstate['comboBox_inexcext'])
-            self.checkBox_Word.setChecked(self._settingstate['checkBox_word'])
-            self.comboBox_SpInf.setCurrentText(self._settingstate['comboBox_spinf'])
-            self.checkBox_IncludeLB.setChecked(self._settingstate['checkBox_inclb'])
-            self.checkBox_IncludeRB.setChecked(self._settingstate['checkBox_incrb'])
-            self.lineEdit_TGPath.setText(self._settingstate['defaultdir'])
+            self._defaultdir = \
+                self._settingstate['defaultdir']
+            self.comboBox_InExcExt.setCurrentText(
+                self._settingstate['comboBox_inexcext'])
+            self.checkBox_Word.setChecked(
+                self._settingstate['checkBox_word'])
+            self.comboBox_SpInf.setCurrentText(
+                self._settingstate['comboBox_spinf'])
+            self.checkBox_IncludeLB.setChecked(
+                self._settingstate['checkBox_inclb'])
+            self.checkBox_IncludeRB.setChecked(
+                self._settingstate['checkBox_incrb'])
+            self.lineEdit_TGPath.setText(
+                self._settingstate['defaultdir'])
         except:
             pass
 
@@ -181,7 +215,7 @@ class RenameTool(QMW, RTUI):
     def _setform(self):
         ''' 设置“插入”标签页的文本框预设内容。'''
         if self.comboBox_InsertWith.currentIndex() == 0:
-            self.lineEdit_InsertForm.setText('[%Y %m %d %H:%M]')
+            self.lineEdit_InsertForm.setText('[%Y-%m-%d]')
         else:
             self.lineEdit_InsertForm.clear()
 
@@ -191,7 +225,8 @@ class RenameTool(QMW, RTUI):
             replsrcs = '、'.join(pk['replsrcs'])
             if not (replwith := pk['replwith']):
                 replwith = '无'
-            title = f'{num:0>{wid}}替换：将 < {replsrcs} > 替换成 < {replwith} >，'
+            title = (f'{num:0>{wid}}替换：将 < {replsrcs} > '
+                     f'替换成 < {replwith} >，')
         elif pk['head'] == 'rrepl':
             if not (rrepllb := pk['rrepllb']):
                 rrepllb = '无'
@@ -202,14 +237,17 @@ class RenameTool(QMW, RTUI):
             if not (rreplwith := pk['rreplwith']):
                 rreplwith = '无'
             title = (f'{num:0>{wid}}范围：范围内替换成 < {rreplwith} >，'
-                     + f'左边界 < {rrepllb} >，右边界 < {rreplrb} >，< {inclb} > 左边界，< {incrb} > 右边界，')
+                     f'左边界 < {rrepllb} >，右边界 < {rreplrb} >，'
+                     f'< {inclb} > 左边界，< {incrb} > 右边界，')
         elif pk['head'] == 'insert':
             insertwith = pk['insertwith']
             form = pk['form']
             insertpos = (
                 str(pk['insertpos'])
-                if isinstance(pk['insertpos'], int) else (str(pk['insertpos'] * 100) + '%'))
-            title = (f'{num:0>{wid}}插入：插入 < {insertwith} >，字符或格式: < {form} >，位置: < {insertpos} >，')
+                if isinstance(pk['insertpos'], int)
+                else (str(pk['insertpos'] * 100) + '%'))
+            title = (f'{num:0>{wid}}插入：插入 < {insertwith} >，'
+                     f'字符或格式: < {form} >，位置: < {insertpos} >，')
         if not (excfd := pk['excfd']):
             excfd = '无'
         else:
@@ -221,11 +259,14 @@ class RenameTool(QMW, RTUI):
             exts = ' '.join(exts)
         word = '是' if pk['word'] else '否'
         spinf = pk['spinf']
-        title += f'排除文件夹: < {excfd} >，{inexcext} < {exts} >，单词模式: < {word} >，作用范围: < {spinf} >'
+        title += f'排除文件夹: < {excfd} >，{inexcext} < {exts} >，' \
+                 f'单词模式: < {word} >，作用范围: < {spinf} >'
         return title
 
     def _getcommon(self):
-        ''' 获取“设定规则”分组内除了 tabview 以外的其他控件的数据(替换、范围替换、插入三个规则类型都共用的控件)。'''
+        ''' 获取“设定规则”分组内除了 tabview 以外的其他控件的数据
+        (替换、范围替换、插入三个规则类型都共用的控件)。
+        '''
         state = dict()
         # 排除的文件夹，简单处理用户输入的文本，提取有效路径
         excfd = [
@@ -236,15 +277,17 @@ class RenameTool(QMW, RTUI):
         state['inexcext'] = self.comboBox_InExcExt.currentText()
         # 限定或排除的扩展名，简单处理用户输入的文本，提取扩展名
         exts = [
-            i.strip() for i in self.lineEdit_Exts.text().split(' ') if i and (i != ' ')
-        ]
+            i.strip() for i in self.lineEdit_Exts.text().split(' ')
+            if i and (i != ' ')]
         state['exts'] = [i if i[0] == '.' else '.' + i for i in exts]
         state['word'] = self.checkBox_Word.isChecked()
         state['spinf'] = self.comboBox_SpInf.currentText()
         return state
 
     def _setcommon(self, state):
-        ''' 设置“设定规则”分组内除了 tabview 以外的其他控件的数据(替换、范围替换、插入三个规则类型都共用的控件)。'''
+        ''' 设置“设定规则”分组内除了 tabview 以外的其他控件的数据
+        (替换、范围替换、插入三个规则类型都共用的控件)。
+        '''
         try:
             # 指定或排除扩展名的下拉单选框
             self.comboBox_InExcExt.setCurrentText(state['inexcext'])
@@ -259,7 +302,8 @@ class RenameTool(QMW, RTUI):
             self.comboBox_SpInf.setCurrentText(state['spinf'])
             # 排除的文件夹列表文本框，excfd是list
             if state['excfd']:
-                self.plainText_ExcludeFolder.setPlainText('\n'.join(state['excfd']))
+                self.plainText_ExcludeFolder.setPlainText(
+                    '\n'.join(state['excfd']))
             else:
                 self.plainText_ExcludeFolder.clear()
         except Exception as err:
@@ -270,8 +314,8 @@ class RenameTool(QMW, RTUI):
         self.settip()
         state = self._getcommon()
         state['head'] = 'repl'
-        replsrcs = [i.replace('%s', ' ')
-            for i in self.lineEdit_RepSrc.text().split(' ') if i]
+        replsrcs = [i.replace('%k', ' ')
+                    for i in self.lineEdit_RepSrc.text().split(' ') if i]
         if not replsrcs:
             self.settip('替换源字符不能为空！')
             self.lineEdit_RepSrc.setFocus()
@@ -279,7 +323,8 @@ class RenameTool(QMW, RTUI):
         state['replsrcs'] = replsrcs
         replwith = self.lineEdit_RepWith.text()
         if not set(replwith).isdisjoint(self.UNUSABLE):
-            self.settip(r"输入字符中包含不可用字符( \/?:*'><| )，请输入其他字符。")
+            self.settip(
+                r"输入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             return False
         state['replwith'] = replwith
         self._packetlist.append(state)
@@ -311,7 +356,8 @@ class RenameTool(QMW, RTUI):
             self.settip('左边界、右边界、替换字符不能同时为空！')
             return False
         if not set(rreplwith).isdisjoint(self.UNUSABLE):
-            self.settip(r"输入字符中包含不可用字符( \/?:*'><| )，请输入其他字符。")
+            self.settip(
+                r"输入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             return False
         state['rrepllb'] = rrepllb
         state['rreplrb'] = rreplrb
@@ -348,21 +394,26 @@ class RenameTool(QMW, RTUI):
             self.settip('请输入要插入的格式!')
             return False
         if not set(form).isdisjoint(self.UNUSABLE):
-            self.settip(r"输入字符中包含不可用字符( \/?:*'><| )，请输入其他字符。")
+            self.settip(
+                r"输入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             return False
+        if self.comboBox_InsertWith.currentText() == '数字序号':
+            if not re.search(r'%([\+\-0-9]{1,11}\.[\+\-0-9]{1,11})%', form):
+                self.settip('请输入正确格式！')
+                return False
         state['form'] = form
         if not (insertpos := self.lineEdit_InsertPos.text()):
             self.settip('请输入插入位置(百分比或绝对数值)！')
             return False
         if ('%' in insertpos) and (insertpos[-1] == '%'):
             try:
-                state['insertpos'] = float(insertpos[:-1]) / 100
+                state['insertpos'] = abs(float(insertpos[:-1])) / 100
             except:
                 self.settip('文本插入位置百分比输入有误，请重新输入！')
                 return False
         else:
             try:
-                state['insertpos'] = int(float(insertpos))
+                state['insertpos'] = abs(int(float(insertpos)))
             except:
                 self.settip('文本插入绝对位置输入有误，请重新输入！')
                 return False
@@ -384,7 +435,9 @@ class RenameTool(QMW, RTUI):
             self.lineEdit_InsertPos.setText(str(inspos))
 
     def _addtoruleslist(self):
-        ''' 根据tabview的标签页位置获取相应页下的用户输入数据并添加到规则列表、保存到文件。'''
+        ''' 根据tabview的标签页位置获取相应页下的用户输入数据并添加到规则列表、
+        保存到文件。
+        '''
         funlist = [self.get_repl, self.get_insert, self.get_rrepl]
         if funlist[self.tabwid.currentIndex()]():
             self.ruleslistupdate()
@@ -412,7 +465,7 @@ class RenameTool(QMW, RTUI):
         self.lineEdit_RRepRB.clear()
         self.lineEdit_RRepWith.clear()
         self.comboBox_InsertWith.setCurrentIndex(0)
-        self.lineEdit_InsertForm.setText('[%Y %m %d %H:%M]')
+        self.lineEdit_InsertForm.setText('[%Y-%m-%d]')
         self.lineEdit_InsertPos.setText('0.0%')
         self.plainText_ExcludeFolder.clear()
         self.comboBox_InExcExt.setCurrentIndex(0)
@@ -451,13 +504,17 @@ class RenameTool(QMW, RTUI):
 
     def _selectdir(self):
         ''' 弹出选择文件夹对话框并返回选择值。'''
-        folderpath = QFD.getExistingDirectory(self, '选择目标文件夹', self._defaultdir)
+        folderpath = QFD.getExistingDirectory(
+            self, '选择目标文件夹', self._defaultdir)
         if folderpath:
             return os.path.realpath(folderpath)
+        self._defaultdir = folderpath
         return folderpath
 
     def _rl_delselected(self):
-        ''' 获取规则当前选中的项，根据索引删除packetlist相应项并更新列表显示,返回删除的项。'''
+        ''' 获取规则当前选中的项，根据索引删除packetlist相应项并更新列表显示,
+        返回删除的项。
+        '''
         self.settip()
         ind = self.list_RulesList.currentRow()
         lth = len(self._packetlist)
@@ -468,7 +525,8 @@ class RenameTool(QMW, RTUI):
                 self.settip('还未选中任何规则！')
             return False
         curit = self._packetlist.pop(ind)
-        # 以下左ind是删除其中一项后要选中的项，如果右ind大于0就选中前面一项，小于等于0时：lth不为空就选中第0项，为空就不选中
+        # 以下左ind是删除其中一项后要选中的项，如果右ind大于0就选中前面一项，
+        # 小于等于0时：lth不为空就选中第0项，为空就不选中
         ind = (ind - 1) if (ind > 0) else (0 if lth > 0 else None)
         self.ruleslistupdate(ind)
         return curit
@@ -521,7 +579,8 @@ class RenameTool(QMW, RTUI):
         ind = self.list_Tasks.currentRow()
         if ind < 1:
             return False
-        self._tasklist[ind - 1], self._tasklist[ind] = self._tasklist[ind], self._tasklist[ind - 1]
+        self._tasklist[ind - 1], self._tasklist[ind] = \
+            self._tasklist[ind], self._tasklist[ind - 1]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind - 1)
         return True
@@ -531,7 +590,8 @@ class RenameTool(QMW, RTUI):
         ind = self.list_Tasks.currentRow()
         if (ind == -1) or (ind >= len(self._tasklist) - 1):
             return False
-        self._tasklist[ind], self._tasklist[ind + 1] = self._tasklist[ind + 1], self._tasklist[ind]
+        self._tasklist[ind], self._tasklist[ind + 1] = \
+            self._tasklist[ind + 1], self._tasklist[ind]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind + 1)
         return True
@@ -557,17 +617,22 @@ class RenameTool(QMW, RTUI):
         self.settip()
         if (ind := self.list_Tasks.currentRow()) != -1:
             self._task_current = self._tasklist[ind]
+            if not self._task_current.RENAMED:
+                PrevWindow.btn_confirm.setEnabled(True)
             successful, failed, unchanged = self._task_current.preview()
             unchanged = '\n'.join(
-                [f'文件名：{os.path.basename(i)}\n所在目录：{os.path.dirname(i)}\n'
+                [f'文件名：{os.path.basename(i)}\n'
+                 f'所在目录：{os.path.dirname(i)}\n'
                  f'{"-" * 150}'
                  for i in unchanged])
             failed = '\n'.join(
-                [f'重命名后：{os.path.basename(val)}\n原文件名：{os.path.basename(key)}\n'
+                [f'重命名后：{os.path.basename(val)}\n'
+                 f'原文件名：{os.path.basename(key)}\n'
                  f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
                  for key, val in failed.items()])
             successful = '\n'.join(
-                [f'重命名后：{os.path.basename(val)}\n原文件名：{os.path.basename(key)}\n'
+                [f'重命名后：{os.path.basename(val)}\n'
+                 f'原文件名：{os.path.basename(key)}\n'
                  f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
                  for key, val in successful.items()])
             PrevWindow.textEdit.setText(successful)
