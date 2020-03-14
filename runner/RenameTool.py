@@ -507,7 +507,7 @@ class RenameTool(QMW, RTUI):
         folderpath = QFD.getExistingDirectory(
             self, '选择目标文件夹', self._defaultdir)
         if folderpath:
-            return os.path.realpath(folderpath)
+            folderpath = os.path.realpath(folderpath)
         self._defaultdir = folderpath
         return folderpath
 
@@ -616,17 +616,17 @@ class RenameTool(QMW, RTUI):
         unchanged = '\n'.join(
             [f'文件名：{os.path.basename(i)}\n'
              f'所在目录：{os.path.dirname(i)}\n'
-             f'{"-" * 150}'
+             f'{"-" * 100}'
              for i in unchanged])
         failed = '\n'.join(
             [f'重命名后：{os.path.basename(val)}\n'
              f'原文件名：{os.path.basename(key)}\n'
-             f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
+             f'所在目录：{os.path.dirname(key)}\\\n{"-" * 100}'
              for key, val in failed.items()])
         successful = '\n'.join(
             [f'重命名后：{os.path.basename(val)}\n'
              f'原文件名：{os.path.basename(key)}\n'
-             f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
+             f'所在目录：{os.path.dirname(key)}\\\n{"-" * 100}'
              for key, val in successful.items()])
         return successful, failed, unchanged
 
@@ -644,7 +644,10 @@ class RenameTool(QMW, RTUI):
             successful, failed, unchanged = self._task_current.preview()
             successful, failed, unchanged = self._mk_res_txt(
                 successful, failed, unchanged)
-            PrevWindow.textEdit.setText(successful)
+            PrevWindow.textEdit_successful.setText(successful)
+            PrevWindow.textEdit_failed.setText(failed)
+            PrevWindow.textEdit_unchanged.setText(unchanged)
+            PrevWindow.resize(1000, 600)
             PrevWindow.show()
             # TODO: 增加PreviewWindow的标签页功能，以查看重命名成功、失败、无变化的文件信息。
         else:
