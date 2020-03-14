@@ -113,7 +113,7 @@ class RenameTool(QMW, RTUI):
         self.btn_TS_DelSelected.clicked.connect(
             self._taskdelselected)
         self.btn_TS_PrevSel.clicked.connect(
-            self._taskpreview)
+            self._task_prev_sel)
 
     def _getsettingstate(self):
         ''' 获取需要保存状态的常用控件状态值。
@@ -127,18 +127,18 @@ class RenameTool(QMW, RTUI):
                 6.范围替换中的是否包含右边界；
                 7.目标文件夹。
         '''
-        self._settingstate['defaultdir'] = \
-            self._defaultdir
-        self._settingstate['comboBox_inexcext'] = \
-            self.comboBox_InExcExt.currentText()
-        self._settingstate['checkBox_word'] = \
-            self.checkBox_Word.isChecked()
-        self._settingstate['comboBox_spinf'] = \
-            self.comboBox_SpInf.currentText()
-        self._settingstate['checkBox_inclb'] = \
-            self.checkBox_IncludeLB.isChecked()
-        self._settingstate['checkBox_incrb'] = \
-            self.checkBox_IncludeRB.isChecked()
+        self._settingstate['defaultdir'] \
+            = self._defaultdir
+        self._settingstate['comboBox_inexcext'] \
+            = self.comboBox_InExcExt.currentText()
+        self._settingstate['checkBox_word'] \
+            = self.checkBox_Word.isChecked()
+        self._settingstate['comboBox_spinf'] \
+            = self.comboBox_SpInf.currentText()
+        self._settingstate['checkBox_inclb'] \
+            = self.checkBox_IncludeLB.isChecked()
+        self._settingstate['checkBox_incrb'] \
+            = self.checkBox_IncludeRB.isChecked()
 
     def _setsettingstate(self):
         ''' 把从设置中读取的控件状态恢复到相应控件上。
@@ -259,8 +259,8 @@ class RenameTool(QMW, RTUI):
             exts = ' '.join(exts)
         word = '是' if pk['word'] else '否'
         spinf = pk['spinf']
-        title += f'排除文件夹: < {excfd} >，{inexcext} < {exts} >，' \
-                 f'单词模式: < {word} >，作用范围: < {spinf} >'
+        title += (f'排除文件夹: < {excfd} >，{inexcext} < {exts} >，'
+                  f'单词模式: < {word} >，作用范围: < {spinf} >')
         return title
 
     def _getcommon(self):
@@ -314,8 +314,7 @@ class RenameTool(QMW, RTUI):
         self.settip()
         state = self._getcommon()
         state['head'] = 'repl'
-        replsrcs = [i.replace('%k', ' ')
-                    for i in self.lineEdit_RepSrc.text().split(' ') if i]
+        replsrcs = [i for i in self.lineEdit_RepSrc.text().split(' ') if i]
         if not replsrcs:
             self.settip('替换源字符不能为空！')
             self.lineEdit_RepSrc.setFocus()
@@ -334,7 +333,8 @@ class RenameTool(QMW, RTUI):
         ''' 设置“替换”中各控件的状态。'''
         self._setcommon(state)
         if state['replsrcs']:
-            self.lineEdit_RepSrc.setText(' '.join(state['replsrcs']))
+            srcs = [i if i != ' ' else '%k' for i in state['replsrcs']]
+            self.lineEdit_RepSrc.setText(' '.join(srcs))
         else:
             self.lineEdit_RepSrc.clear()
         if state['replwith']:
@@ -612,37 +612,50 @@ class RenameTool(QMW, RTUI):
         self.tasklistupdate()
         return True
 
-    def _taskpreview(self):
-        ''' 预览任务执行结果并让用户决定是否执行。'''
+    def _mk_res_txt(self, successful, failed, unchanged):
+        unchanged = '\n'.join(
+            [f'文件名：{os.path.basename(i)}\n'
+             f'所在目录：{os.path.dirname(i)}\n'
+             f'{"-" * 150}'
+             for i in unchanged])
+        failed = '\n'.join(
+            [f'重命名后：{os.path.basename(val)}\n'
+             f'原文件名：{os.path.basename(key)}\n'
+             f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
+             for key, val in failed.items()])
+        successful = '\n'.join(
+            [f'重命名后：{os.path.basename(val)}\n'
+             f'原文件名：{os.path.basename(key)}\n'
+             f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
+             for key, val in successful.items()])
+        return successful, failed, unchanged
+
+    def _task_prev_all(self):
+        ''' 运行所有任务。'''
+        pass
+
+    def _task_prev_sel(self):
+        ''' 预览选中任务的执行结果并让用户决定是否执行。'''
         self.settip()
         if (ind := self.list_Tasks.currentRow()) != -1:
             self._task_current = self._tasklist[ind]
             if not self._task_current.RENAMED:
                 PrevWindow.btn_confirm.setEnabled(True)
             successful, failed, unchanged = self._task_current.preview()
-            unchanged = '\n'.join(
-                [f'文件名：{os.path.basename(i)}\n'
-                 f'所在目录：{os.path.dirname(i)}\n'
-                 f'{"-" * 150}'
-                 for i in unchanged])
-            failed = '\n'.join(
-                [f'重命名后：{os.path.basename(val)}\n'
-                 f'原文件名：{os.path.basename(key)}\n'
-                 f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
-                 for key, val in failed.items()])
-            successful = '\n'.join(
-                [f'重命名后：{os.path.basename(val)}\n'
-                 f'原文件名：{os.path.basename(key)}\n'
-                 f'所在目录：{os.path.dirname(key)}\\\n{"-" * 150}'
-                 for key, val in successful.items()])
+            successful, failed, unchanged = self._mk_res_txt(
+                successful, failed, unchanged)
             PrevWindow.textEdit.setText(successful)
             PrevWindow.show()
+            # TODO: 增加PreviewWindow的标签页功能，以查看重命名成功、失败、无变化的文件信息。
         else:
             self.settip('没有选中任何任务！')
 
-    def _dorename(self):
-        if self._task_current != None:
-            self._task_current.start()
+    def _dorename(self, mode):
+        if mode == 'sel':
+            if self._task_current != None:
+                self._task_current.start()
+        elif mode == 'all':
+            pass
 
 
 class Preview(QMW, PUI):
@@ -657,7 +670,7 @@ class Preview(QMW, PUI):
 
     def _confirm(self):
         self.btn_confirm.setEnabled(False)
-        MainWindow._dorename()
+        MainWindow._dorename('sel')
 
 
 if __name__ == '__main__':
