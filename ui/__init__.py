@@ -1,1 +1,2 @@
-# RnameTool的UI模块。
+# encoding: utf-8
+''' RnameTool的UI模块。'''
