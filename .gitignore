@@ -1,4 +1,4 @@
-.idea
-ui/__pycache__
-.vscode
-runner/__pycache__
+/.idea/
+/.vscode/
+/ui/__pycache__/
+/runner/__pycache__/

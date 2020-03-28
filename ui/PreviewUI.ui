@@ -101,7 +101,7 @@
         </widget>
         <widget class="QWidget" name="tab_3">
          <attribute name="title">
-          <string>不相关文件</string>
+          <string>无变化</string>
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
@@ -184,7 +184,7 @@
            </font>
           </property>
           <property name="text">
-           <string>重命名( 不再确认，请慎用！)</string>
+           <string>重命名( 不再确认！)</string>
           </property>
          </widget>
         </item>
