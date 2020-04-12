@@ -33,7 +33,8 @@ class Task(object):
         self.RENAMED = False
 
     def __allfile(self):
-        '''返回值是排除用户要排除的文件或文件夹、扩展名(指定或排除)后得到的所有文件路径。
+        '''
+        返回值是排除用户要排除的文件或文件夹、扩展名(指定或排除)后得到的所有文件路径。
         :return full_path_list: 目标目录下的完整文件路径列表，该列表排除了用户输入的需要排除的子目录。
         '''
         full_path_list = list()
@@ -57,7 +58,8 @@ class Task(object):
         return full_path_list
 
     def __rename(self):
-        ''' 根据successful列表重命名文件。
+        '''
+        根据successful列表重命名文件。
         重命名失败则把'路径+文件名'从'成功'列表移到'失败'列表。
         设置任务的'已重命名'标志为True。
         '''
@@ -72,7 +74,8 @@ class Task(object):
         self.RENAMED = True
 
     def __rng_str(self, string, rrepllb, rreplrb):
-        ''' 寻找符合给定范围的字符串(最少匹配)，
+        '''
+        寻找符合给定范围的字符串(最少匹配)，
         并返回找到的字符串列表。
         :param string: 需要匹配的原字符串。
         :param rrepllb: 范围的左边界。
@@ -87,7 +90,9 @@ class Task(object):
         return srcs
 
     def __rng_num(self):
-        ''' 输入数字范围进行替换。'''
+        '''
+        输入数字范围进行替换。
+        '''
         pass
 
     def __repl_str(self, string, srcs, repl):
@@ -294,7 +299,7 @@ class Task(object):
                 ext = re.sub(fr'{pattern}', repl, ext, count=count)
             elif spinf == '全部：整体':
                 filename, ext = filename + ext, ''
-                filename = re.sub(fr'{pattern}', repl, ext, count=count)
+                filename = re.sub(fr'{pattern}', repl, filename, count=count)
             fullpath_new = os.path.join(folder, filename + ext)
             if ((set(filename + ext) != '.')
                     and (len(fullpath_new) <= self.MAX_NAME)):
