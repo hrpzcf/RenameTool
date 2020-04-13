@@ -14,17 +14,6 @@ class Ui_RenameToolUI(object):
     def setupUi(self, RenameToolUI):
         RenameToolUI.setObjectName("RenameToolUI")
         RenameToolUI.resize(1035, 618)
-        palette = QtGui.QPalette()
-        brush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(240, 240, 240))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.Window, brush)
-        brush = QtGui.QBrush(QtGui.QColor(240, 240, 240))
-        brush.setStyle(QtCore.Qt.SolidPattern)
-        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.Window, brush)
-        RenameToolUI.setPalette(palette)
         RenameToolUI.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.centralwidget = QtWidgets.QWidget(RenameToolUI)
         self.centralwidget.setObjectName("centralwidget")
@@ -565,7 +554,7 @@ class Ui_RenameToolUI(object):
 
     def retranslateUi(self, RenameToolUI):
         _translate = QtCore.QCoreApplication.translate
-        RenameToolUI.setWindowTitle(_translate("RenameToolUI", "简易批量重命名工具 ver.0.0.1 alpha"))
+        RenameToolUI.setWindowTitle(_translate("RenameToolUI", "批量重命名工具 2020.0413.00 alpha"))
         self.groupBox_SetRule.setTitle(_translate("RenameToolUI", "设定规则"))
         self.label.setText(_translate("RenameToolUI", "替换源:"))
         self.lineEdit_ReplSrc.setStatusTip(_translate("RenameToolUI", "必填项，多个替换源请用空格隔开，需要替换空格本身时，请输入 \\k 替代。"))
@@ -672,13 +661,3 @@ class Ui_RenameToolUI(object):
         self.btn_LNR_ViewLog.setText(_translate("RenameToolUI", "查看记录"))
         self.btn_LNR_TryTRestore.setStatusTip(_translate("RenameToolUI", "尝试将上一次重命名操作进行还原。"))
         self.btn_LNR_TryTRestore.setText(_translate("RenameToolUI", "尝试还原"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    RenameToolUI = QtWidgets.QMainWindow()
-    ui = Ui_RenameToolUI()
-    ui.setupUi(RenameToolUI)
-    RenameToolUI.show()
-    sys.exit(app.exec_())

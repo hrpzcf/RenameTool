@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>结果预览</string>
+   <string>重命名结果预览</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -184,7 +184,7 @@
            </font>
           </property>
           <property name="text">
-           <string>重命名( 不再确认！)</string>
+           <string>重命名( 不再确认 )</string>
           </property>
          </widget>
         </item>

@@ -1,9 +1,9 @@
 # -*- encoding: utf-8 -*-
 '''
 --------------------------------------
-@Version   : ver. 0.0.1
+@Version   : 2020.0413.00
 @Author    : hrp
-@Desciption: 主模块，快速批量对文件重命名。
+@Desciption: 主程序，快速批量对文件重命名。
 --------------------------------------
 '''
 
@@ -669,9 +669,8 @@ class RenameTool(QMW, RTUI):
             return False
         targets = self.lineEdit_TGPath.text()
         if (not targets) or (not os.path.exists(targets)):
-            targets = self._select_dir()
+            targets = self._dptarget()
         if not targets:
-            self.tips('未选择目标文件夹。')
             return False
         pkdic = deepcopy(self._packetlist[ind])
         excfd = [i.strip()
@@ -686,14 +685,14 @@ class RenameTool(QMW, RTUI):
     def _dptarget(self):
         '''
         “...”按钮选择路径并显示到“目标文件夹”后的文本框。
-        :return: bool。
+        :return: bool or str，str:目标路径，bool:False。
         '''
-        tg = self._select_dir()
-        if not tg:
+        target = self._select_dir()
+        if not target:
             self.tips('没有选择文件夹。')
             return False
-        self.lineEdit_TGPath.setText(tg)
-        return True
+        self.lineEdit_TGPath.setText(target)
+        return target
 
     def _taskmoveup(self):
         '''
@@ -833,7 +832,7 @@ class RenameTool(QMW, RTUI):
                 PrevWindow.btn_cancel.setText('关闭')
                 PrevWindow.btn_confirm.setEnabled(False)
             else:
-                PrevWindow.btn_confirm.setText('重命名( 不再确认！)')
+                PrevWindow.btn_confirm.setText('重命名( 不再确认 )')
                 PrevWindow.btn_cancel.setText('取消')
                 if successful:
                     PrevWindow.btn_confirm.setEnabled(True)

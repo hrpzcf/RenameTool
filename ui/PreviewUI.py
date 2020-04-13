@@ -122,19 +122,9 @@ class Ui_PreviewUI(object):
 
     def retranslateUi(self, PreviewUI):
         _translate = QtCore.QCoreApplication.translate
-        PreviewUI.setWindowTitle(_translate("PreviewUI", "结果预览"))
+        PreviewUI.setWindowTitle(_translate("PreviewUI", "重命名结果预览"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("PreviewUI", "可以重命名"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("PreviewUI", "无法重命名"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("PreviewUI", "无变化"))
-        self.btn_confirm.setText(_translate("PreviewUI", "重命名( 不再确认！)"))
+        self.btn_confirm.setText(_translate("PreviewUI", "重命名( 不再确认 )"))
         self.btn_cancel.setText(_translate("PreviewUI", "取消"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    PreviewUI = QtWidgets.QMainWindow()
-    ui = Ui_PreviewUI()
-    ui.setupUi(PreviewUI)
-    PreviewUI.show()
-    sys.exit(app.exec_())
