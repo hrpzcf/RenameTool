@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'PreviewUI.ui'
+# Form implementation generated from reading ui file 'previewwd.ui'
 #
 # Created by: PyQt5 UI code generator 5.14.1
 #
@@ -10,12 +10,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_PreviewUI(object):
-    def setupUi(self, PreviewUI):
-        PreviewUI.setObjectName("PreviewUI")
-        PreviewUI.setWindowModality(QtCore.Qt.ApplicationModal)
-        PreviewUI.resize(800, 500)
-        self.centralwidget = QtWidgets.QWidget(PreviewUI)
+class Ui_prevwd(object):
+    def setupUi(self, prevwd):
+        prevwd.setObjectName("prevwd")
+        prevwd.setWindowModality(QtCore.Qt.ApplicationModal)
+        prevwd.resize(800, 500)
+        self.centralwidget = QtWidgets.QWidget(prevwd)
         self.centralwidget.setObjectName("centralwidget")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout(self.centralwidget)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
@@ -114,17 +114,17 @@ class Ui_PreviewUI(object):
         self.verticalLayout.setStretch(0, 94)
         self.verticalLayout.setStretch(1, 6)
         self.horizontalLayout_3.addLayout(self.verticalLayout)
-        PreviewUI.setCentralWidget(self.centralwidget)
+        prevwd.setCentralWidget(self.centralwidget)
 
-        self.retranslateUi(PreviewUI)
+        self.retranslateUi(prevwd)
         self.tabWidget.setCurrentIndex(0)
-        QtCore.QMetaObject.connectSlotsByName(PreviewUI)
+        QtCore.QMetaObject.connectSlotsByName(prevwd)
 
-    def retranslateUi(self, PreviewUI):
+    def retranslateUi(self, prevwd):
         _translate = QtCore.QCoreApplication.translate
-        PreviewUI.setWindowTitle(_translate("PreviewUI", "重命名结果预览"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("PreviewUI", "可以重命名"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("PreviewUI", "无法重命名"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("PreviewUI", "无变化"))
-        self.btn_confirm.setText(_translate("PreviewUI", "重命名( 不再确认 )"))
-        self.btn_cancel.setText(_translate("PreviewUI", "取消"))
+        prevwd.setWindowTitle(_translate("prevwd", "重命名结果预览"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_1), _translate("prevwd", "可以重命名"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("prevwd", "无法重命名"))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("prevwd", "无变化"))
+        self.btn_confirm.setText(_translate("prevwd", "重命名( 不再确认 )"))
+        self.btn_cancel.setText(_translate("prevwd", "取消"))

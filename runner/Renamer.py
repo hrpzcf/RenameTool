@@ -13,19 +13,20 @@ from time import localtime
 from time import strftime
 from Logger import wLog
 
+sep = os.sep
+
 
 class Task(object):
     MAX_NAME = 255
-    __ESCAPE = {
-        '^': '\^', '$': '\$', '(': '\(', ')': '\)', '-': '\-', '[': '\[',
-        ']': '\]', '{': '\{', '}': '\}', '.': '\.', '+': '\+', ',': '\,'}
+    __ESCAPE = {'^': '\^', '$': '\$', '(': '\(', ')': '\)', '-': '\-', '[': '\[',
+                ']': '\]', '{': '\{', '}': '\}', '.': '\.', '+': '\+', ',': '\,', }
 
     def __init__(self, title, target, statedict):
         self.target = target
         self.stdict = statedict
-        excfd = '，'.join(
-            statedict['excfd']) + '\\' if statedict['excfd'] else '无'
-        self.title = f'目标：< {target}\\ >\n排除：< {excfd} >\n{title}\n{"-" * 50}'
+        excfd = '，'.join([i + sep if os.path.isdir(i)
+                          else i for i in statedict['excfd']]) if statedict['excfd'] else '无'
+        self.title = f'目标：< {target}{sep} >\n排除：< {excfd} >\n{title}\n{"-" * 50}'
         self._successful = dict()
         self._failed = dict()
         self._unchanged = list()
@@ -207,11 +208,13 @@ class Task(object):
         elif insertwith == '普通字符':
             str_to_ins = form
         elif insertwith == '数字序号':
-            re_sch = re.search(r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form)
+            re_sch = re.search(
+                r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form)
             begin, step, wid = map(int, re_sch.group(1).split('.'))
         for fullpath in self.__allfile():
             if insertwith == '数字序号':
-                str_to_ins = form.replace(re_sch.group(), f'{str(begin):0>{wid}}')
+                str_to_ins = form.replace(
+                    re_sch.group(), f'{str(begin):0>{wid}}')
             folder = os.path.dirname(fullpath)
             filename, ext = os.path.splitext(os.path.basename(fullpath))
             filename_length = len(filename)

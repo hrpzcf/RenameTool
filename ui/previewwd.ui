@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PreviewUI</class>
- <widget class="QMainWindow" name="PreviewUI">
+ <class>prevwd</class>
+ <widget class="QMainWindow" name="prevwd">
   <property name="windowModality">
    <enum>Qt::ApplicationModal</enum>
   </property>

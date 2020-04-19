@@ -18,15 +18,15 @@ sys.path = [os.path.dirname(filepath)] + sys.path
 import pickle
 import re
 from copy import deepcopy
-from PyQt5.QtWidgets import QApplication as QAPP
-from PyQt5.QtWidgets import QFileDialog as QFD
-from PyQt5.QtWidgets import QMainWindow as QMW
+from PyQt5.QtWidgets import QApplication as app
+from PyQt5.QtWidgets import QFileDialog as qfd
+from PyQt5.QtWidgets import QMainWindow as qmw
 from Renamer import Task
-from ui.RenameToolUI import Ui_RenameToolUI as RTUI
-from ui.PreviewUI import Ui_PreviewUI as PUI
+from ui import *
 
+sep = os.sep
 
-class RenameTool(QMW, RTUI):
+class RenameTool(qmw, rentwd):
     '''
     RnameTool的主模块。
     属性 __UNUSABLE: set，win平台不可用于文件名的字符的集合。
@@ -594,7 +594,7 @@ class RenameTool(QMW, RTUI):
         :param rmb: bool，True or False，是否将本选择的文件夹作为下次的起始目录。
         :return: 选择文件夹则返完整回路径，取消则返回 False。
         '''
-        folderpath = QFD.getExistingDirectory(
+        folderpath = qfd.getExistingDirectory(
             self, '选择文件夹', self._settingstate['defaultdir'])
         if folderpath:
             folderpath = os.path.realpath(folderpath)
@@ -608,7 +608,7 @@ class RenameTool(QMW, RTUI):
         弹出选择文件对话框并返回选择值。
         :return: list，选择文件则返回完整路径列表，取消则返回 False。
         '''
-        pathlist, _ = QFD.getOpenFileNames(
+        pathlist, _ = qfd.getOpenFileNames(
             self, '多文件选择', self._settingstate['defaultdir'])
         if pathlist:
             pathlist = [os.path.realpath(i) for i in pathlist]
@@ -787,13 +787,13 @@ class RenameTool(QMW, RTUI):
              f'{"-" * 100}'
              for i in unchanged])
         failed = '\n'.join(
-            [f'文件路径：{os.path.dirname(key)}\\\n'
+            [f'文件路径：{os.path.dirname(key)}{sep}\n'
              f'原文件名：{os.path.basename(key)}\n'
              f'重命名后：{os.path.basename(val)}\n'
              f'{"-" * 100}'
              for key, val in failed.items()])
         successful = '\n'.join(
-            [f'文件路径：{os.path.dirname(key)}\\\n'
+            [f'文件路径：{os.path.dirname(key)}{sep}\n'
              f'原文件名：{os.path.basename(key)}\n'
              f'重命名后：{os.path.basename(val)}\n'
              f'{"-" * 100}'
@@ -854,7 +854,7 @@ class RenameTool(QMW, RTUI):
             pass
 
 
-class Preview(QMW, PUI):
+class Preview(qmw, prevwd):
     def __init__(self):
         super(Preview, self).__init__()
         self.setupUi(self)
@@ -884,7 +884,7 @@ class Preview(QMW, PUI):
 
 
 if __name__ == '__main__':
-    app = QAPP(sys.argv)
+    app = app(sys.argv)
     MainWindow = RenameTool()
     PrevWindow = Preview()
     MainWindow.show()

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
  <author>hrp</author>
- <class>RenameToolUI</class>
- <widget class="QMainWindow" name="RenameToolUI">
+ <class>rentwd</class>
+ <widget class="QMainWindow" name="rentwd">
   <property name="geometry">
    <rect>
     <x>0</x>
