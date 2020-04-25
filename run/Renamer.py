@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 '''
 --------------------------------------
-@Version   : 20.0413.00
+@Version   : 20.0425.00
 @Author    : hrp
 @Desciption: RnameTool的任务模块。
 --------------------------------------
@@ -11,9 +11,9 @@ import os
 import re
 from time import localtime
 from time import strftime
-from Logger import wLog
+from run.Logger import wLog
 
-sep = os.sep
+osSep = os.sep
 
 
 class Task(object):
@@ -24,9 +24,9 @@ class Task(object):
     def __init__(self, title, target, statedict):
         self.target = target
         self.stdict = statedict
-        excfd = '，'.join([i + sep if os.path.isdir(i)
+        excfd = '，'.join([i + osSep if os.path.isdir(i)
                           else i for i in statedict['excfd']]) if statedict['excfd'] else '无'
-        self.title = f'目标：< {target}{sep} >\n排除：< {excfd} >\n{title}\n{"-" * 50}'
+        self.title = f'目标：< {target}{osSep} >\n排除：< {excfd} >\n{title}\n{"-" * 50}'
         self._successful = dict()
         self._failed = dict()
         self._unchanged = list()

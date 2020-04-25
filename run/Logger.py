@@ -1,11 +1,12 @@
 # -*- encoding: utf-8 -*-
 '''
 --------------------------------------
-@Version   : 20.0413.00
+@Version   : 20.0425.00
 @Author    : hrp
 @Desciption: RnameTool的历史记录模块。
 --------------------------------------
 '''
+
 # TODO: 这个模块刚开始写，想法不成熟，写的很乱，预想的功能有：
 #   *有限的文件重命名跟踪记录(同一个文件: 文件名1 -> 文件名2 -> 文件名3 ...)；
 #   记录文件以文本方式保存，可以用记事本打开查看；
@@ -23,7 +24,7 @@ import sys
 
 class wLog(object):
     def __init__(self, title):
-        self.setspath = os.path.join(os.path.realpath('..'), 'logs')
+        self.setspath = os.path.join(os.path.realpath('.'), 'logs')
         if not os.path.exists(self.setspath):
             # 无法创建文件夹则报错退出。
             os.mkdir(self.setspath)

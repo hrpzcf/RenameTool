@@ -1,6 +1,6 @@
 # encoding: utf-8
 '''
-RnameTool的UI模块包。
+RnameTool的UI包。
 '''
 
 __all__ = list()

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 '''
 --------------------------------------
-@Version   : 2020.0413.00
+@Version   : 2020.0425.00
 @Author    : hrp
 @Desciption: 主程序，快速批量对文件重命名。
 --------------------------------------
@@ -10,21 +10,21 @@
 # TODO: 计划变更功能:目标支持多文件和文件夹，支持文件、文件夹这样的混合目标。
 
 import os
-import sys
-
-filepath = os.path.dirname(os.path.realpath(__file__))
-sys.path = [os.path.dirname(filepath)] + sys.path
-
 import pickle
 import re
+import sys
 from copy import deepcopy
+
 from PyQt5.QtWidgets import QApplication as app
 from PyQt5.QtWidgets import QFileDialog as qfd
 from PyQt5.QtWidgets import QMainWindow as qmw
-from Renamer import Task
+
+from run.Renamer import Task
 from ui import *
 
-sep = os.sep
+osSep = os.sep
+myDir = os.path.dirname(os.path.realpath(__file__))
+
 
 class RenameTool(qmw, rentwd):
     '''
@@ -57,8 +57,8 @@ class RenameTool(qmw, rentwd):
         '''
         检查路径下存放设置文件的目录状态是否正常。
         '''
-        dir_logs = os.path.join(sys.path[0], 'logs')
-        dir_sets = os.path.join(sys.path[0], 'settings')
+        dir_logs = os.path.join(myDir, 'logs')
+        dir_sets = os.path.join(myDir, 'settings')
         for i in (dir_sets, dir_logs):
             if not os.path.exists(i):
                 try:
@@ -85,7 +85,8 @@ class RenameTool(qmw, rentwd):
         # checkBox_IncludeRB：     包含右边界选择框
         self.checkBox_IncludeRB.clicked.connect(self._getsettingstate)
         # comboBox_InExcExt：      指定或排除文件格式下拉单选框
-        self.comboBox_InExcExt.currentIndexChanged.connect(self._getsettingstate)
+        self.comboBox_InExcExt.currentIndexChanged.connect(
+            self._getsettingstate)
         # comboBox_SpInf：         作用范围是否包含扩展名下拉单选框
         self.comboBox_SpInf.currentIndexChanged.connect(self._getsettingstate)
         # btn_SaveToList：         保存到列表按钮
@@ -126,7 +127,8 @@ class RenameTool(qmw, rentwd):
         获取需要保存状态的常用控件状态值。并存放到_settingstate字典。
         '''
         # 限定扩展名或排除扩展名选择框
-        self._settingstate['comboBox_inexcext'] = self.comboBox_InExcExt.currentText()
+        self._settingstate['comboBox_inexcext'] = self.comboBox_InExcExt.currentText(
+        )
         # 是否单词模式
         self._settingstate['checkBox_word'] = self.checkBox_Word.isChecked()
         # 作用范围是否包含扩展名
@@ -142,15 +144,19 @@ class RenameTool(qmw, rentwd):
         '''
         try:
             # 限定扩展名或排除扩展名选择框
-            self.comboBox_InExcExt.setCurrentText(self._settingstate['comboBox_inexcext'])
+            self.comboBox_InExcExt.setCurrentText(
+                self._settingstate['comboBox_inexcext'])
             # 单词模式
             self.checkBox_Word.setChecked(self._settingstate['checkBox_word'])
             # 作用范围是否包含扩展名
-            self.comboBox_SpInf.setCurrentText(self._settingstate['comboBox_spinf'])
+            self.comboBox_SpInf.setCurrentText(
+                self._settingstate['comboBox_spinf'])
             # 范围替换中的是否包含左边界
-            self.checkBox_IncludeLB.setChecked(self._settingstate['checkBox_inclb'])
+            self.checkBox_IncludeLB.setChecked(
+                self._settingstate['checkBox_inclb'])
             # 范围替换中的是否包含右边界
-            self.checkBox_IncludeRB.setChecked(self._settingstate['checkBox_incrb'])
+            self.checkBox_IncludeRB.setChecked(
+                self._settingstate['checkBox_incrb'])
             # 目标文件夹文本框
             self.lineEdit_TGPath.setText(self._settingstate['defaultdir'])
         except:
@@ -422,7 +428,7 @@ class RenameTool(qmw, rentwd):
             return False
         if self.comboBox_InsertWith.currentText() == '数字序号':
             tmp = re.search(
-                    r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form)
+                r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form)
             if not tmp:
                 self.tips('请输入正确格式！')
                 return False
@@ -521,7 +527,8 @@ class RenameTool(qmw, rentwd):
         '''
         根据标签页位置运行相应函数获取用户输入的数据等操作。
         '''
-        funlist = (self.get_repl, self.get_insert, self.get_rrepl, self.get_regex)
+        funlist = (self.get_repl, self.get_insert,
+                   self.get_rrepl, self.get_regex)
         if funlist[self.tabwid.currentIndex()]():
             self.ruleslistupdate()
 
@@ -702,7 +709,8 @@ class RenameTool(qmw, rentwd):
         ind = self.list_Tasks.currentRow()
         if ind < 1:
             return False
-        self._tasklist[ind - 1], self._tasklist[ind] = self._tasklist[ind], self._tasklist[ind - 1]
+        self._tasklist[ind -
+                       1], self._tasklist[ind] = self._tasklist[ind], self._tasklist[ind - 1]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind - 1)
         return True
@@ -715,7 +723,8 @@ class RenameTool(qmw, rentwd):
         ind = self.list_Tasks.currentRow()
         if (ind == -1) or (ind >= len(self._tasklist) - 1):
             return False
-        self._tasklist[ind], self._tasklist[ind + 1] = self._tasklist[ind + 1], self._tasklist[ind]
+        self._tasklist[ind], self._tasklist[ind +
+                                            1] = self._tasklist[ind + 1], self._tasklist[ind]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind + 1)
         return True
@@ -787,13 +796,13 @@ class RenameTool(qmw, rentwd):
              f'{"-" * 100}'
              for i in unchanged])
         failed = '\n'.join(
-            [f'文件路径：{os.path.dirname(key)}{sep}\n'
+            [f'文件路径：{os.path.dirname(key)}{osSep}\n'
              f'原文件名：{os.path.basename(key)}\n'
              f'重命名后：{os.path.basename(val)}\n'
              f'{"-" * 100}'
              for key, val in failed.items()])
         successful = '\n'.join(
-            [f'文件路径：{os.path.dirname(key)}{sep}\n'
+            [f'文件路径：{os.path.dirname(key)}{osSep}\n'
              f'原文件名：{os.path.basename(key)}\n'
              f'重命名后：{os.path.basename(val)}\n'
              f'{"-" * 100}'
