@@ -7,29 +7,24 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1035</width>
-    <height>618</height>
+    <width>1000</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="focusPolicy">
    <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>批量重命名工具 2020.0413.00 alpha</string>
+   <string>批量重命名工具 2020.0425.00 alpha</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_19">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="6,5">
+     <layout class="QHBoxLayout" name="horizontalLayout_17" stretch="50,45">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_11" stretch="10,50">
         <item>
          <widget class="QGroupBox" name="groupBox_SetRule">
-          <property name="font">
-           <font>
-            <family>Microsoft YaHei UI</family>
-           </font>
-          </property>
           <property name="title">
            <string>设定规则</string>
           </property>
@@ -50,11 +45,6 @@
                   <layout class="QHBoxLayout" name="horizontalLayout_10">
                    <item>
                     <widget class="QLabel" name="label">
-                     <property name="font">
-                      <font>
-                       <family>Microsoft YaHei UI</family>
-                      </font>
-                     </property>
                      <property name="text">
                       <string>替换源:</string>
                      </property>
@@ -62,12 +52,6 @@
                    </item>
                    <item>
                     <widget class="QLineEdit" name="lineEdit_ReplSrc">
-                     <property name="font">
-                      <font>
-                       <family>Consolas</family>
-                       <pointsize>9</pointsize>
-                      </font>
-                     </property>
                      <property name="statusTip">
                       <string>必填项，多个替换源请用空格隔开，需要替换空格本身时，请输入 \k 替代。</string>
                      </property>
@@ -78,11 +62,6 @@
                    </item>
                    <item>
                     <widget class="QLabel" name="label_2">
-                     <property name="font">
-                      <font>
-                       <family>Microsoft YaHei UI</family>
-                      </font>
-                     </property>
                      <property name="text">
                       <string>替换为:</string>
                      </property>
@@ -90,12 +69,6 @@
                    </item>
                    <item>
                     <widget class="QLineEdit" name="lineEdit_ReplWith">
-                     <property name="font">
-                      <font>
-                       <family>Consolas</family>
-                       <pointsize>9</pointsize>
-                      </font>
-                     </property>
                      <property name="statusTip">
                       <string>此处留空则表示将删除前面填写的字符。</string>
                      </property>
@@ -117,11 +90,6 @@
                   <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="5,15,45,5,17">
                    <item>
                     <widget class="QLabel" name="label_13">
-                     <property name="font">
-                      <font>
-                       <family>Microsoft YaHei UI</family>
-                      </font>
-                     </property>
                      <property name="text">
                       <string>插入：</string>
                      </property>
@@ -129,11 +97,6 @@
                    </item>
                    <item>
                     <widget class="QComboBox" name="comboBox_InsertWith">
-                     <property name="font">
-                      <font>
-                       <family>Microsoft YaHei UI</family>
-                      </font>
-                     </property>
                      <property name="statusTip">
                       <string>选择插入日期时间、者普通字符或者数字序号。</string>
                      </property>
@@ -156,12 +119,6 @@
                    </item>
                    <item>
                     <widget class="QLineEdit" name="lineEdit_InsertForm">
-                     <property name="font">
-                      <font>
-                       <family>Consolas</family>
-                       <pointsize>9</pointsize>
-                      </font>
-                     </property>
                      <property name="toolTip">
                       <string>日期时间：%Y(年)、%y(年,两位数)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可与普通字符自由组合。
 数字序号：填写格式：&lt;起始.步长.宽度&gt;，可与普通字符组合，如 &lt;0.1.3&gt;~，则按 000~、001~、002~、003~…添加序号。</string>
@@ -182,11 +139,6 @@
                    </item>
                    <item>
                     <widget class="QLabel" name="label_4">
-                     <property name="font">
-                      <font>
-                       <family>Microsoft YaHei UI</family>
-                      </font>
-                     </property>
                      <property name="text">
                       <string>插入位置：</string>
                      </property>
@@ -194,12 +146,6 @@
                    </item>
                    <item>
                     <widget class="QLineEdit" name="lineEdit_InsertPos">
-                     <property name="font">
-                      <font>
-                       <family>Consolas</family>
-                       <pointsize>9</pointsize>
-                      </font>
-                     </property>
                      <property name="statusTip">
                       <string>自定义位置支持输入百分比或绝对数值，如果输入的百分比或绝对数值大于文件名长度，则插入到文件名末尾，不支持负数。</string>
                      </property>
@@ -226,11 +172,6 @@
                     <layout class="QHBoxLayout" name="horizontalLayout_13">
                      <item>
                       <widget class="QLabel" name="label_5">
-                       <property name="font">
-                        <font>
-                         <family>Microsoft YaHei UI</family>
-                        </font>
-                       </property>
                        <property name="text">
                         <string>左边界：</string>
                        </property>
@@ -238,12 +179,6 @@
                      </item>
                      <item>
                       <widget class="QLineEdit" name="lineEdit_RReplLB">
-                       <property name="font">
-                        <font>
-                         <family>Consolas</family>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>填写想要用来确定左边界的字符串(字符串越长匹配越准确)，左边界可以留空，留空时左边界默认为文件名最前端。</string>
                        </property>
@@ -254,12 +189,6 @@
                      </item>
                      <item>
                       <widget class="QCheckBox" name="checkBox_IncludeLB">
-                       <property name="font">
-                        <font>
-                         <family>Microsoft YaHei UI</family>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>是否包括左边界字符。</string>
                        </property>
@@ -277,11 +206,6 @@
                      </item>
                      <item>
                       <widget class="QLabel" name="label_6">
-                       <property name="font">
-                        <font>
-                         <family>Microsoft YaHei UI</family>
-                        </font>
-                       </property>
                        <property name="text">
                         <string>右边界：</string>
                        </property>
@@ -289,12 +213,6 @@
                      </item>
                      <item>
                       <widget class="QLineEdit" name="lineEdit_RReplRB">
-                       <property name="font">
-                        <font>
-                         <family>Consolas</family>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>填写想要用来确定右边界的字符串(字符串越长匹配越准确)，右边界可以留空，留空时右边界默认为文件名末尾(默认不含扩展名)。</string>
                        </property>
@@ -305,12 +223,6 @@
                      </item>
                      <item>
                       <widget class="QCheckBox" name="checkBox_IncludeRB">
-                       <property name="font">
-                        <font>
-                         <family>Microsoft YaHei UI</family>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>是否包括右边界字符。</string>
                        </property>
@@ -325,11 +237,6 @@
                     <layout class="QHBoxLayout" name="horizontalLayout_12">
                      <item>
                       <widget class="QLabel" name="label_7">
-                       <property name="font">
-                        <font>
-                         <family>Microsoft YaHei UI</family>
-                        </font>
-                       </property>
                        <property name="text">
                         <string>边界内字符替换为：</string>
                        </property>
@@ -337,12 +244,6 @@
                      </item>
                      <item>
                       <widget class="QLineEdit" name="lineEdit_RReplWith">
-                       <property name="font">
-                        <font>
-                         <family>Consolas</family>
-                         <pointsize>9</pointsize>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>此处留空则表示将删除范围内所有字符，注意此处和左右边界不能同时为空。</string>
                        </property>
@@ -375,11 +276,6 @@
                      </item>
                      <item>
                       <widget class="QLineEdit" name="lineEdit_RegexPattern">
-                       <property name="font">
-                        <font>
-                         <family>Consolas</family>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>此模式需要掌握正则表达式写法。正则表达式匹配时单词模式不生效，可以自己写表达式来匹配单词。</string>
                        </property>
@@ -398,11 +294,6 @@
                      </item>
                      <item>
                       <widget class="QLineEdit" name="lineEdit_ReRepl">
-                       <property name="font">
-                        <font>
-                         <family>Consolas</family>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>要替换掉匹配字符的字符。</string>
                        </property>
@@ -417,11 +308,6 @@
                      </item>
                      <item>
                       <widget class="QLineEdit" name="lineEdit_ReReplCount">
-                       <property name="font">
-                        <font>
-                         <family>Consolas</family>
-                        </font>
-                       </property>
                        <property name="statusTip">
                         <string>替换次数，0 代表全部替换。</string>
                        </property>
@@ -442,11 +328,6 @@
               <layout class="QHBoxLayout" name="horizontalLayout_7">
                <item>
                 <widget class="QComboBox" name="comboBox_InExcExt">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>符合后面列出的扩展名的文件，限定只对其起作用或只对其不起作用。</string>
                  </property>
@@ -464,12 +345,6 @@
                </item>
                <item>
                 <widget class="QLineEdit" name="lineEdit_Exts">
-                 <property name="font">
-                  <font>
-                   <family>Consolas</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>此处留空则表示将对所有扩展名的文件进行操作。</string>
                  </property>
@@ -484,11 +359,6 @@
               <layout class="QHBoxLayout" name="horizontalLayout_8" stretch="15,3,5,5,10">
                <item>
                 <widget class="QCheckBox" name="checkBox_Word">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>单词模式下，如果文件名以单词组成(以空格分开的词，包括中文)，则会按单词进行匹配，不会拆分单词。</string>
                  </property>
@@ -499,11 +369,6 @@
                </item>
                <item>
                 <widget class="QLabel" name="label_14">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。</string>
                  </property>
@@ -514,11 +379,6 @@
                </item>
                <item>
                 <widget class="QComboBox" name="comboBox_SpInf">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。</string>
                  </property>
@@ -556,11 +416,6 @@
                </item>
                <item>
                 <widget class="QPushButton" name="btn_SaveToList">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>把当前标签页的输入信息打包成一条规则并保存到列表。</string>
                  </property>
@@ -578,11 +433,6 @@
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_RuleList">
-          <property name="font">
-           <font>
-            <family>Microsoft YaHei UI</family>
-           </font>
-          </property>
           <property name="title">
            <string>规则列表</string>
           </property>
@@ -591,13 +441,6 @@
             <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="9,1">
              <item>
               <widget class="QListWidget" name="list_RulesList">
-               <property name="font">
-                <font>
-                 <family>Microsoft YaHei UI</family>
-                 <pointsize>9</pointsize>
-                 <underline>false</underline>
-                </font>
-               </property>
                <property name="statusTip">
                 <string>用户创建的重命名规则列表，同一规则可以多次与不同文件夹组合加入任务列表，或同一文件夹可以多次组合不同规则加入任务列表。</string>
                </property>
@@ -645,11 +488,6 @@
               <layout class="QVBoxLayout" name="verticalLayout_9">
                <item>
                 <widget class="QLabel" name="label_12">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                  </font>
-                 </property>
                  <property name="text">
                   <string>排除文件和文件夹:</string>
                  </property>
@@ -657,12 +495,6 @@
                </item>
                <item>
                 <widget class="QPlainTextEdit" name="plainText_ExcludeFolder">
-                 <property name="font">
-                  <font>
-                   <family>Consolas</family>
-                   <pointsize>9</pointsize>
-                  </font>
-                 </property>
                  <property name="contextMenuPolicy">
                   <enum>Qt::NoContextMenu</enum>
                  </property>
@@ -729,12 +561,6 @@
              </item>
              <item>
               <widget class="QLineEdit" name="lineEdit_TGPath">
-               <property name="font">
-                <font>
-                 <family>Consolas</family>
-                 <pointsize>9</pointsize>
-                </font>
-               </property>
                <property name="statusTip">
                 <string>要进行批量重命名操作的文件夹。</string>
                </property>
@@ -763,7 +589,7 @@
                 <bool>false</bool>
                </property>
                <property name="statusTip">
-                <string>未来得及完成的功能。</string>
+                <string>未完成的功能。</string>
                </property>
                <property name="text">
                 <string>深入子目录</string>
@@ -797,11 +623,6 @@
        <layout class="QVBoxLayout" name="verticalLayout_12" stretch="5,5">
         <item>
          <widget class="QGroupBox" name="groupBox_Tasks">
-          <property name="font">
-           <font>
-            <family>Microsoft YaHei UI</family>
-           </font>
-          </property>
           <property name="title">
            <string>任务</string>
           </property>
@@ -819,13 +640,6 @@
               <layout class="QHBoxLayout" name="horizontalLayout_5">
                <item>
                 <widget class="QListWidget" name="list_Tasks">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                   <pointsize>9</pointsize>
-                   <underline>false</underline>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>等待执行的任务列表。</string>
                  </property>
@@ -907,11 +721,6 @@
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_LogNRestore">
-          <property name="font">
-           <font>
-            <family>Microsoft YaHei UI</family>
-           </font>
-          </property>
           <property name="title">
            <string>记录 / 还原</string>
           </property>
@@ -926,23 +735,16 @@
               </widget>
              </item>
              <item>
-              <layout class="QVBoxLayout" name="verticalLayout_2">
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
                <item>
                 <widget class="QListWidget" name="list_Logs">
-                 <property name="font">
-                  <font>
-                   <family>Microsoft YaHei UI</family>
-                   <pointsize>9</pointsize>
-                   <underline>false</underline>
-                  </font>
-                 </property>
                  <property name="statusTip">
                   <string>重命名后生成的历史记录，可以提供有限的恢复功能。</string>
                  </property>
                 </widget>
                </item>
                <item>
-                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                <layout class="QVBoxLayout" name="verticalLayout_2">
                  <item>
                   <widget class="QPushButton" name="btn_LNR_ClearLog">
                    <property name="enabled">
@@ -952,7 +754,7 @@
                     <string>删除选中的历史记录。</string>
                    </property>
                    <property name="text">
-                    <string>删除最早记录</string>
+                    <string>删除记录</string>
                    </property>
                   </widget>
                  </item>
@@ -997,13 +799,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusBar">
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <tabstops>
   <tabstop>tabwid</tabstop>

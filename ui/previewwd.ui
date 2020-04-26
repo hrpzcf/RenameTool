@@ -37,11 +37,6 @@
       </property>
       <item>
        <widget class="QTabWidget" name="tabWidget">
-        <property name="font">
-         <font>
-          <family>Microsoft YaHei UI</family>
-         </font>
-        </property>
         <property name="currentIndex">
          <number>0</number>
         </property>
@@ -52,13 +47,6 @@
          <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
            <widget class="QTextEdit" name="textEdit_successful">
-            <property name="font">
-             <font>
-              <family>Microsoft YaHei UI</family>
-              <pointsize>9</pointsize>
-              <underline>false</underline>
-             </font>
-            </property>
             <property name="contextMenuPolicy">
              <enum>Qt::NoContextMenu</enum>
             </property>
@@ -79,13 +67,6 @@
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
            <widget class="QTextEdit" name="textEdit_failed">
-            <property name="font">
-             <font>
-              <family>Microsoft YaHei UI</family>
-              <pointsize>9</pointsize>
-              <underline>false</underline>
-             </font>
-            </property>
             <property name="contextMenuPolicy">
              <enum>Qt::NoContextMenu</enum>
             </property>
@@ -106,13 +87,6 @@
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QTextEdit" name="textEdit_unchanged">
-            <property name="font">
-             <font>
-              <family>Microsoft YaHei UI</family>
-              <pointsize>9</pointsize>
-              <underline>false</underline>
-             </font>
-            </property>
             <property name="contextMenuPolicy">
              <enum>Qt::NoContextMenu</enum>
             </property>
@@ -175,14 +149,6 @@
             </disabled>
            </palette>
           </property>
-          <property name="font">
-           <font>
-            <family>Microsoft YaHei UI</family>
-            <pointsize>10</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
           <property name="text">
            <string>重命名( 不再确认 )</string>
           </property>
@@ -190,14 +156,6 @@
         </item>
         <item>
          <widget class="QPushButton" name="btn_cancel">
-          <property name="font">
-           <font>
-            <family>Microsoft YaHei UI</family>
-            <pointsize>10</pointsize>
-            <weight>50</weight>
-            <bold>false</bold>
-           </font>
-          </property>
           <property name="text">
            <string>取消</string>
           </property>

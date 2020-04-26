@@ -323,13 +323,14 @@ class Task(object):
         :return: list，成功、失败、无变化 列表。
         '''
         if not self._PREVIEWED:
-            if self.stdict['head'] == 'repl':
+            head = self.stdict['head']
+            if head == 'repl':
                 self.__repl()
-            elif self.stdict['head'] == 'rrepl':
+            elif head == 'rrepl':
                 self.__rrepl()
-            elif self.stdict['head'] == 'insert':
+            elif head == 'insert':
                 self.__ins()
-            elif self.stdict['head'] == 'regex':
+            elif head == 'regex':
                 self.__regex()
             self._PREVIEWED = True
         return self._successful, self._failed, self._unchanged

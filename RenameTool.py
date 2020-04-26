@@ -3,7 +3,7 @@
 --------------------------------------
 @Version   : 2020.0425.00
 @Author    : hrp
-@Desciption: 主程序，快速批量对文件重命名。
+@Desciption: 主程序。
 --------------------------------------
 '''
 
@@ -51,7 +51,7 @@ class RenameTool(qmw, rentwd):
         self._getsettingstate()
         self._settingstate['defaultdir'] = os.path.realpath('.')
         self._loadsettings()
-        self._signal_slot_func()
+        self._signal_slot()
 
     def _checksetsdir(self):
         '''
@@ -74,7 +74,7 @@ class RenameTool(qmw, rentwd):
     def closeEvent(self, *args, **kwargs):
         self._savesettings()
 
-    def _signal_slot_func(self):
+    def _signal_slot(self):
         '''
         统一绑定各种控件信号与函数。
         '''
