@@ -11,8 +11,6 @@
 2.  程序可以运行在带有 Python3 的 Windows 和 Linux（在deepin上测试） 上。
     The program can run on Windows and Linux (tested on deepin) with Python3.
 
-3.  xxxx
-
 
 #### 码云特技
 
