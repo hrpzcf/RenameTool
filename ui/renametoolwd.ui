@@ -15,7 +15,7 @@
    <enum>Qt::StrongFocus</enum>
   </property>
   <property name="windowTitle">
-   <string>批量重命名工具 2020.0425.00 alpha</string>
+   <string>批量重命名工具</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_19">

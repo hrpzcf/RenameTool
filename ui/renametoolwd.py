@@ -425,7 +425,7 @@ class Ui_rentwd(object):
 
     def retranslateUi(self, rentwd):
         _translate = QtCore.QCoreApplication.translate
-        rentwd.setWindowTitle(_translate("rentwd", "批量重命名工具 2020.0425.00 alpha"))
+        rentwd.setWindowTitle(_translate("rentwd", "批量重命名工具"))
         self.groupBox_SetRule.setTitle(_translate("rentwd", "设定规则"))
         self.label.setText(_translate("rentwd", "替换源:"))
         self.lineEdit_ReplSrc.setStatusTip(_translate("rentwd", "必填项，多个替换源请用空格隔开，需要替换空格本身时，请输入 \\k 替代。"))
@@ -532,3 +532,13 @@ class Ui_rentwd(object):
         self.btn_LNR_ViewLog.setText(_translate("rentwd", "查看记录"))
         self.btn_LNR_TryTRestore.setStatusTip(_translate("rentwd", "尝试将上一次重命名操作进行还原。"))
         self.btn_LNR_TryTRestore.setText(_translate("rentwd", "尝试还原"))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    rentwd = QtWidgets.QMainWindow()
+    ui = Ui_rentwd()
+    ui.setupUi(rentwd)
+    rentwd.show()
+    sys.exit(app.exec_())

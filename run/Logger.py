@@ -25,24 +25,29 @@ import sys
 class wLog(object):
     def __init__(self, title):
         self.setspath = os.path.join(os.path.realpath('.'), 'logs')
+
         if not os.path.exists(self.setspath):
             # 无法创建文件夹则报错退出。
             os.mkdir(self.setspath)
         elif os.path.isfile(self.setspath):
-            raise Exception('logs文件夹名被文件占用！')
+            raise Exception('程序目录下logs文件夹名被文件占用！')
+
         self.time = strftime("[%Y-%m-%d %H-%M-%S]", localtime())
         self.title = ''.join((self.time, title))
         self.filehd = None
         self.filename = self.__mkfilename()
+
         if self.filename:
             # 无法创建文件则报错退出。
-            self.filehd = open(os.path.join(
-                self.setspath, self.filename), 'wt', encoding='utf-8')
+            self.filehd = open(os.path.join(self.setspath, self.filename),
+                               'wt',
+                               encoding='utf-8')
             self.filehd.write(''.join((self.title, f'\n{"-" * 50}')))
 
     def __mkfilename(self):
         filename = '-'.join((self.title, f'{str(abs(hash(self.title))):0>10}',
                              str(random.randrange(10000, 100000)))) + '.log'
+
         if os.path.exists(os.path.join(self.setspath, filename)):
             return self.__mkfilename()
         else:
@@ -51,8 +56,8 @@ class wLog(object):
     def write(self, string1, string2):
         if self.filehd:
             self.filehd.write('\n')
-            string = ''.join((
-                '重命名前：', string1, '\n', '重命名后：', string2, f'\n{"-" * 50}'))
+            string = ''.join(
+                ('重命名前：', string1, '\n', '重命名后：', string2, f'\n{"-" * 50}'))
             self.filehd.write(string)
         # return self.filename
 

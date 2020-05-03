@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 '''
 --------------------------------------
-@Version   : 2020.0425.00
 @Author    : hrp
 @Desciption: 主程序。
 --------------------------------------
@@ -22,8 +21,10 @@ from PyQt5.QtWidgets import QMainWindow as qmw
 from run.Renamer import Task
 from ui import *
 
-osSep = os.sep
-myDir = os.path.dirname(os.path.realpath(__file__))
+__osSep__ = os.sep
+__myDir__ = os.path.dirname(os.path.realpath(__file__))
+
+__version__ = '2020.0502.00 Alpha'
 
 
 class RenameTool(qmw, rentwd):
@@ -52,13 +53,14 @@ class RenameTool(qmw, rentwd):
         self._settingstate['defaultdir'] = os.path.realpath('.')
         self._loadsettings()
         self._signal_slot()
+        self.setWindowTitle(' - '.join((self.windowTitle(), __version__)))
 
     def _checksetsdir(self):
         '''
         检查路径下存放设置文件的目录状态是否正常。
         '''
-        dir_logs = os.path.join(myDir, 'logs')
-        dir_sets = os.path.join(myDir, 'settings')
+        dir_logs = os.path.join(__myDir__, 'logs')
+        dir_sets = os.path.join(__myDir__, 'settings')
         for i in (dir_sets, dir_logs):
             if not os.path.exists(i):
                 try:
@@ -127,16 +129,19 @@ class RenameTool(qmw, rentwd):
         获取需要保存状态的常用控件状态值。并存放到_settingstate字典。
         '''
         # 限定扩展名或排除扩展名选择框
-        self._settingstate['comboBox_inexcext'] = self.comboBox_InExcExt.currentText(
-        )
+        self._settingstate[
+            'comboBox_inexcext'] = self.comboBox_InExcExt.currentText()
         # 是否单词模式
         self._settingstate['checkBox_word'] = self.checkBox_Word.isChecked()
         # 作用范围是否包含扩展名
-        self._settingstate['comboBox_spinf'] = self.comboBox_SpInf.currentText()
+        self._settingstate['comboBox_spinf'] = self.comboBox_SpInf.currentText(
+        )
         # 范围替换中的是否包含左边界
-        self._settingstate['checkBox_inclb'] = self.checkBox_IncludeLB.isChecked()
+        self._settingstate[
+            'checkBox_inclb'] = self.checkBox_IncludeLB.isChecked()
         # 范围替换中的是否包含右边界
-        self._settingstate['checkBox_incrb'] = self.checkBox_IncludeRB.isChecked()
+        self._settingstate[
+            'checkBox_incrb'] = self.checkBox_IncludeRB.isChecked()
 
     def _setsettingstate(self):
         '''
@@ -175,6 +180,7 @@ class RenameTool(qmw, rentwd):
                 self._setsettingstate()
             except Exception as err:
                 self.tips('设置加载出错:' + str(err))
+
         # 读取规则列表并刷新。
         if os.path.exists(self._rulespath):
             try:
@@ -193,6 +199,7 @@ class RenameTool(qmw, rentwd):
                 pickle.dump(self._settingstate, sf)
         except Exception as err:
             self.tips('设置保存出错:' + str(err))
+
         # 保存规则列表到文件。
         try:
             with open(self._rulespath, 'wb') as rsl:
@@ -226,53 +233,70 @@ class RenameTool(qmw, rentwd):
         '''
         if pk['head'] == 'repl':
             srcs = '、'.join([i if i != ' ' else r'\k' for i in pk['srcs']])
+
             repl = pk['repl']
             if not repl:
                 repl = '无'
-            title = (f'{num:0>{wid}}替换：将 < {srcs} > '
-                     f'替换成 < {repl} >，')
+
+            title = f'{num:0>{wid}}替换：将 < {srcs} > 替换成 < {repl} >，'
+
         elif pk['head'] == 'rrepl':
             rrepllb = pk['rrepllb']
             if not rrepllb:
                 rrepllb = '无'
+
             rreplrb = pk['rreplrb']
             if not rreplrb:
                 rreplrb = '无'
+
             inclb = '包含' if pk['inclb'] else '不含'
             incrb = '包含' if pk['incrb'] else '不含'
+
             repl = pk['repl']
             if not repl:
                 repl = '无'
-            title = (f'{num:0>{wid}}范围：范围内替换成 < {repl} >，'
-                     f'左边界 < {rrepllb} >，右边界 < {rreplrb} >，'
-                     f'< {inclb} > 左边界，< {incrb} > 右边界，')
+
+            title = (
+                f'{num:0>{wid}}范围：范围内替换成 < {repl} >，左边界 '
+                f'< {rrepllb} >，右边界 < {rreplrb} >，< {inclb} > 左边界，< {incrb} > 右边界，'
+            )
+
         elif pk['head'] == 'insert':
             insertwith = pk['insertwith']
             form = pk['form']
-            insertpos = (
-                str(pk['insertpos'])
-                if isinstance(pk['insertpos'], int)
-                else (str(pk['insertpos'] * 100) + '%'))
-            title = (f'{num:0>{wid}}插入：插入 < {insertwith} >，'
-                     f'字符或格式: < {form} >，位置: < {insertpos} >，')
+
+            insertpos = (str(pk['insertpos']) if isinstance(
+                pk['insertpos'], int) else (str(pk['insertpos'] * 100) + '%'))
+
+            title = (
+                f'{num:0>{wid}}插入：插入 '
+                f'< {insertwith} >，字符或格式: < {form} >，位置: < {insertpos} >，')
+
         elif pk['head'] == 'regex':
             pattern = pk['pattern']
+
             repl = pk['repl']
             if not repl:
                 repl = '无'
+
             count = pk['count']
-            title = (f'{num:0>{wid}}正则：表达式 < {pattern} >，'
-                     f'匹配项替换为 < {repl} >，次数: < {count} >，')
+
+            title = (f'{num:0>{wid}}正则：表达式 '
+                     f'< {pattern} >，匹配项替换为 < {repl} >，次数: < {count} >，')
+
         inexcext = pk['inexcext']
+
         exts = pk['exts']
         if not exts:
             exts = '无'
         else:
             exts = ' '.join(exts)
+
         word = '是' if pk['word'] else '否'
         spinf = pk['spinf']
-        title += (f'{inexcext} < {exts} >，'
-                  f'单词模式: < {word} >，作用范围: < {spinf} >')
+
+        title += f'{inexcext} < {exts} >，单词模式: < {word} >，作用范围: < {spinf} >'
+
         return title
 
     def _getcommon(self):
@@ -283,12 +307,16 @@ class RenameTool(qmw, rentwd):
         '''
         state = dict()
         state['inexcext'] = self.comboBox_InExcExt.currentText()
+
         # 限定或排除的扩展名，简单处理用户输入的文本，提取扩展名
-        exts = [i.strip() for i in self.lineEdit_Exts.text().split(' ')
-                if i and (i != ' ')]
+        exts = [
+            i.strip() for i in self.lineEdit_Exts.text().split(' ')
+            if i and (i != ' ')
+        ]
         state['exts'] = [i if i[0] == '.' else '.' + i for i in exts]
         state['word'] = self.checkBox_Word.isChecked()
         state['spinf'] = self.comboBox_SpInf.currentText()
+
         return state
 
     def _setcommon(self, state):
@@ -300,15 +328,19 @@ class RenameTool(qmw, rentwd):
         try:
             # 指定或排除扩展名的下拉单选框
             self.comboBox_InExcExt.setCurrentText(state['inexcext'])
+
             # 后面的填写扩展名的文本框，exts也是list
             if state['exts']:
                 self.lineEdit_Exts.setText(' '.join(state['exts']))
             else:
                 self.lineEdit_Exts.clear()
+
             # 单词模式勾选框
             self.checkBox_Word.setChecked(state['word'])
+
             # 作用范围下拉单选框
             self.comboBox_SpInf.setCurrentText(state['spinf'])
+
         except Exception as err:
             self.tips('设置控件时出错：' + str(err))
 
@@ -319,27 +351,35 @@ class RenameTool(qmw, rentwd):
         '''
         self.tips()
         state = self._getcommon()
+
         state['head'] = 'repl'
-        srcs = [' ' if i == r'\k' else i
-                for i in self.lineEdit_ReplSrc.text().split(' ') if i]
+
+        srcs = [
+            ' ' if i == r'\k' else i
+            for i in self.lineEdit_ReplSrc.text().split(' ') if i
+        ]
+
         if not srcs:
             self.tips('替换源字符不能为空！')
             self.lineEdit_ReplSrc.setFocus()
             return False
+
         elif not set(srcs).isdisjoint(self.__UNUSABLE):
-            self.tips(
-                r"替换源字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+            self.tips(r"替换源字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             self.lineEdit_ReplSrc.setFocus()
             return False
+
         state['srcs'] = srcs
         repl = self.lineEdit_ReplWith.text()
+
         if not set(repl).isdisjoint(self.__UNUSABLE):
-            self.tips(
-                r"替换后字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+            self.tips(r"替换后字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             self.lineEdit_ReplWith.setFocus()
             return False
+
         state['repl'] = repl
         self._packetlist.append(state)
+
         return True
 
     def _set_repl(self, state):
@@ -348,11 +388,13 @@ class RenameTool(qmw, rentwd):
         :param state: 字典。
         '''
         self._setcommon(state)
+
         if state['srcs']:
             srcs = [i if i != ' ' else r'\k' for i in state['srcs']]
             self.lineEdit_ReplSrc.setText(' '.join(srcs))
         else:
             self.lineEdit_ReplSrc.clear()
+
         if state['repl']:
             self.lineEdit_ReplWith.setText(state['repl'])
         else:
@@ -371,25 +413,28 @@ class RenameTool(qmw, rentwd):
         state['inclb'] = self.checkBox_IncludeLB.isChecked()
         state['incrb'] = self.checkBox_IncludeRB.isChecked()
         repl = self.lineEdit_RReplWith.text()
+
         if not any((rrepllb, rreplrb, repl)):
             self.tips('左边界、右边界、替换字符不能同时为空！')
             return False
+
         if not set(rrepllb).isdisjoint(self.__UNUSABLE):
-            self.tips(
-                r"左边界字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+            self.tips(r"左边界字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             return False
+
         elif not set(rreplrb).isdisjoint(self.__UNUSABLE):
-            self.tips(
-                r"右边界字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+            self.tips(r"右边界字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             return False
+
         elif not set(repl).isdisjoint(self.__UNUSABLE):
-            self.tips(
-                r"替换后字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+            self.tips(r"替换后字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             return False
+
         state['rrepllb'] = rrepllb
         state['rreplrb'] = rreplrb
         state['repl'] = repl
         self._packetlist.append(state)
+
         return True
 
     def _set_rrepl(self, state):
@@ -402,12 +447,15 @@ class RenameTool(qmw, rentwd):
             self.lineEdit_RReplLB.setText(state['rrepllb'])
         else:
             self.lineEdit_RReplLB.clear()
+
         if state['rreplrb']:
             self.lineEdit_RReplRB.setText(state['rreplrb'])
         else:
             self.lineEdit_RReplRB.clear()
+
         self.checkBox_IncludeLB.setChecked(state['inclb'])
         self.checkBox_IncludeRB.setChecked(state['incrb'])
+
         if state['repl']:
             self.lineEdit_RReplWith.setText(state['repl'])
         else:
@@ -423,30 +471,35 @@ class RenameTool(qmw, rentwd):
         state['head'] = 'insert'
         state['insertwith'] = self.comboBox_InsertWith.currentText()
         form = self.lineEdit_InsertForm.text()
+
         if not form:
             self.tips('请输入要插入的格式!')
             return False
+
         if self.comboBox_InsertWith.currentText() == '数字序号':
-            tmp = re.search(
-                r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form)
+            tmp = re.search(r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form)
+
             if not tmp:
                 self.tips('请输入正确格式！')
                 return False
-            if not set(form.replace(
-                    tmp.group(), '', 1)).isdisjoint(self.__UNUSABLE):
-                self.tips(
-                    r"插入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+
+            if not set(form.replace(tmp.group(), '', 1)).isdisjoint(
+                    self.__UNUSABLE):
+                self.tips(r"插入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
                 return False
+
         else:
             if not set(form).isdisjoint(self.__UNUSABLE):
-                self.tips(
-                    r"插入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+                self.tips(r"插入字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
                 return False
+
         state['form'] = form
+
         insertpos = self.lineEdit_InsertPos.text()
         if not insertpos:
             self.tips('请输入插入位置(百分比或绝对数值)！')
             return False
+
         if ('%' in insertpos) and (insertpos[-1] == '%'):
             try:
                 state['insertpos'] = abs(float(insertpos[:-1])) / 100
@@ -459,7 +512,9 @@ class RenameTool(qmw, rentwd):
             except:
                 self.tips('文本插入绝对位置输入有误，请重新输入！')
                 return False
+
         self._packetlist.append(state)
+
         return True
 
     def _set_insert(self, state):
@@ -468,10 +523,12 @@ class RenameTool(qmw, rentwd):
         '''
         self._setcommon(state)
         self.comboBox_InsertWith.setCurrentText(state['insertwith'])
+
         if state['form']:
             self.lineEdit_InsertForm.setText(state['form'])
         else:
             self.lineEdit_InsertForm.clear()
+
         inspos = state['insertpos']
         if isinstance(inspos, float):
             self.lineEdit_InsertPos.setText(str(inspos * 100) + '%')
@@ -487,18 +544,22 @@ class RenameTool(qmw, rentwd):
         state = self._getcommon()
         state['head'] = 'regex'
         pattern = self.lineEdit_RegexPattern.text()
+
         if not pattern:
             self.tips('没有输入表达式。')
             self.lineEdit_ReRepl.setFocus()
             return False
+
         state['pattern'] = pattern
+
         repl = self.lineEdit_ReRepl.text()
         if not set(repl).isdisjoint(self.__UNUSABLE):
-            self.tips(
-                r"替换字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
+            self.tips(r"替换字符中包含不可用字符( \ / ? : * ' > < | )，请输入其他字符。")
             self.lineEdit_ReRepl.setFocus()
             return False
+
         state['repl'] = repl
+
         count = self.lineEdit_ReReplCount.text()
         try:
             count = int(count)
@@ -510,8 +571,10 @@ class RenameTool(qmw, rentwd):
             self.tips('替换次数输入不正确。')
             self.lineEdit_ReReplCount.setFocus()
             return False
+
         state['count'] = count
         self._packetlist.append(state)
+
         return True
 
     def _set_regex(self, state):
@@ -527,8 +590,9 @@ class RenameTool(qmw, rentwd):
         '''
         根据标签页位置运行相应函数获取用户输入的数据等操作。
         '''
-        funlist = (self.get_repl, self.get_insert,
-                   self.get_rrepl, self.get_regex)
+        funlist = (self.get_repl, self.get_insert, self.get_rrepl,
+                   self.get_regex)
+
         if funlist[self.tabwid.currentIndex()]():
             self.ruleslistupdate()
 
@@ -578,9 +642,12 @@ class RenameTool(qmw, rentwd):
         self.list_RulesList.clear()
         lth = len(self._packetlist)
         wid = len(str(lth)) + 1
+
         for i in range(lth):
             self.list_RulesList.addItem(
-                self._pktitle(self._packetlist[i], str(i + 1) + '.', wid))
+                self._pktitle(self._packetlist[i],
+                              str(i + 1) + '.', wid))
+
         if ind == None:
             if lth:
                 self.list_RulesList.setCurrentRow(0)
@@ -592,6 +659,7 @@ class RenameTool(qmw, rentwd):
         更新任务列表。
         '''
         self.list_Tasks.clear()
+
         for i in self._tasklist:
             self.list_Tasks.addItem(i.title)
 
@@ -601,13 +669,16 @@ class RenameTool(qmw, rentwd):
         :param rmb: bool，True or False，是否将本选择的文件夹作为下次的起始目录。
         :return: 选择文件夹则返完整回路径，取消则返回 False。
         '''
-        folderpath = qfd.getExistingDirectory(
-            self, '选择文件夹', self._settingstate['defaultdir'])
+        folderpath = qfd.getExistingDirectory(self, '选择文件夹',
+                                              self._settingstate['defaultdir'])
+
         if folderpath:
             folderpath = os.path.realpath(folderpath)
         else:
             return False
+
         self._settingstate['defaultdir'] = folderpath
+
         return folderpath
 
     def _select_files(self):
@@ -615,12 +686,14 @@ class RenameTool(qmw, rentwd):
         弹出选择文件对话框并返回选择值。
         :return: list，选择文件则返回完整路径列表，取消则返回 False。
         '''
-        pathlist, _ = qfd.getOpenFileNames(
-            self, '多文件选择', self._settingstate['defaultdir'])
+        pathlist, _ = qfd.getOpenFileNames(self, '多文件选择',
+                                           self._settingstate['defaultdir'])
+
         if pathlist:
             pathlist = [os.path.realpath(i) for i in pathlist]
         else:
             return False
+
         return pathlist
 
     def _rl_delselected(self):
@@ -631,17 +704,20 @@ class RenameTool(qmw, rentwd):
         self.tips()
         ind = self.list_RulesList.currentRow()
         lth = len(self._packetlist)
+
         if ind == -1:
             if not lth:
                 self.tips('规则列表为空！')
             else:
                 self.tips('还未选中任何规则！')
             return False
+
         curit = self._packetlist.pop(ind)
         # 以下左ind是删除其中一项后要选中的项，如果右ind大于0就选中前面一项，
         # 小于等于0时：lth不为空就选中第0项，为空就不选中
         ind = (ind - 1) if (ind > 0) else (0 if lth > 0 else None)
         self.ruleslistupdate(ind)
+
         return curit
 
     def _rl_editselected(self):
@@ -650,9 +726,11 @@ class RenameTool(qmw, rentwd):
         :return: bool。
         '''
         curit = self._rl_delselected()
+
         if not curit:
             return False
         self._setstate(curit)
+
         return True
 
     def _rl_clear(self):
@@ -668,25 +746,35 @@ class RenameTool(qmw, rentwd):
         '''
         self.tips()
         ind = self.list_RulesList.currentRow()
+
         if ind == -1:
             if not len(self._packetlist):
                 self.tips('规则列表为空！')
             else:
                 self.tips('还未选中任何规则！')
             return False
+
         targets = self.lineEdit_TGPath.text()
+
         if (not targets) or (not os.path.exists(targets)):
             targets = self._dptarget()
+
         if not targets:
             return False
+
         pkdic = deepcopy(self._packetlist[ind])
-        excfd = [i.strip()
-                 for i in self.plainText_ExcludeFolder.toPlainText().split('\n')
-                 if i and (i != '\n')]
+
+        excfd = [
+            i.strip()
+            for i in self.plainText_ExcludeFolder.toPlainText().split('\n')
+            if i and (i != '\n')
+        ]
         pkdic['excfd'] = [i for i in excfd if os.path.exists(i)]
+
         self._tasklist.append(
             Task(self._pktitle(pkdic), os.path.realpath(targets), pkdic))
         self.tasklistupdate()
+
         return True
 
     def _dptarget(self):
@@ -695,10 +783,13 @@ class RenameTool(qmw, rentwd):
         :return: bool or str，str:目标路径，bool:False。
         '''
         target = self._select_dir()
+
         if not target:
             self.tips('没有选择文件夹。')
             return False
+
         self.lineEdit_TGPath.setText(target)
+
         return target
 
     def _taskmoveup(self):
@@ -707,12 +798,16 @@ class RenameTool(qmw, rentwd):
         :return: bool。
         '''
         ind = self.list_Tasks.currentRow()
+
         if ind < 1:
             return False
-        self._tasklist[ind -
-                       1], self._tasklist[ind] = self._tasklist[ind], self._tasklist[ind - 1]
+        self._tasklist[
+            ind -
+            1], self._tasklist[ind] = self._tasklist[ind], self._tasklist[ind -
+                                                                          1]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind - 1)
+
         return True
 
     def _taskmovedown(self):
@@ -721,12 +816,15 @@ class RenameTool(qmw, rentwd):
         :return: bool。
         '''
         ind = self.list_Tasks.currentRow()
+
         if (ind == -1) or (ind >= len(self._tasklist) - 1):
             return False
-        self._tasklist[ind], self._tasklist[ind +
-                                            1] = self._tasklist[ind + 1], self._tasklist[ind]
+
+        self._tasklist[ind], self._tasklist[ind + 1] = self._tasklist[
+            ind + 1], self._tasklist[ind]
         self.tasklistupdate()
         self.list_Tasks.setCurrentRow(ind + 1)
+
         return True
 
     def _taskclear(self):
@@ -742,11 +840,14 @@ class RenameTool(qmw, rentwd):
         删除选中任务。
         '''
         ind = self.list_Tasks.currentRow()
+
         if ind == -1:
             self.tips('未选中任何任务。')
             return False
+
         self._tasklist.pop(ind)
         self.tasklistupdate()
+
         return True
 
     def _clsexcfolder(self):
@@ -761,6 +862,7 @@ class RenameTool(qmw, rentwd):
         '''
         curtext = self.plainText_ExcludeFolder.toPlainText()
         selected = self._select_dir()
+
         if selected:
             if curtext:
                 curtext = '\n'.join((curtext, selected))
@@ -774,6 +876,7 @@ class RenameTool(qmw, rentwd):
         '''
         curtext = self.plainText_ExcludeFolder.toPlainText()
         selected = self._select_files()
+
         if selected:
             selected = '\n'.join(selected)
             if curtext:
@@ -790,23 +893,23 @@ class RenameTool(qmw, rentwd):
         :param unchanged: list，预览中文件名无变化的文件。
         :return: 分别返回可以重命名的文件、不可重命名的文件、无变化的文件的显示格式。
         '''
-        unchanged = '\n'.join(
-            [f'文件路径：{os.path.dirname(i)}\n'
-             f'原文件名：{os.path.basename(i)}\n'
-             f'{"-" * 100}'
-             for i in unchanged])
-        failed = '\n'.join(
-            [f'文件路径：{os.path.dirname(key)}{osSep}\n'
-             f'原文件名：{os.path.basename(key)}\n'
-             f'重命名后：{os.path.basename(val)}\n'
-             f'{"-" * 100}'
-             for key, val in failed.items()])
-        successful = '\n'.join(
-            [f'文件路径：{os.path.dirname(key)}{osSep}\n'
-             f'原文件名：{os.path.basename(key)}\n'
-             f'重命名后：{os.path.basename(val)}\n'
-             f'{"-" * 100}'
-             for key, val in successful.items()])
+        unchanged = '\n'.join([
+            f'文件路径：{os.path.dirname(i)}\n原文件名：{os.path.basename(i)}\n{"-" * 100}'
+            for i in unchanged
+        ])
+
+        failed = '\n'.join([
+            f'文件路径：{os.path.dirname(key)}{__osSep__}\n'
+            f'原文件名：{os.path.basename(key)}\n重命名后：{os.path.basename(val)}\n{"-" * 100}'
+            for key, val in failed.items()
+        ])
+
+        successful = '\n'.join([
+            f'文件路径：{os.path.dirname(key)}{__osSep__}\n'
+            f'原文件名：{os.path.basename(key)}\n重命名后：{os.path.basename(val)}\n{"-" * 100}'
+            for key, val in successful.items()
+        ])
+
         return successful, failed, unchanged
 
     def _task_prev_all(self):
@@ -821,21 +924,22 @@ class RenameTool(qmw, rentwd):
         '''
         self.tips()
         ind = self.list_Tasks.currentRow()
+
         if ind != -1:
             self._task_current = self._tasklist[ind]
             successful, failed, unchanged = self._task_current.preview()
             successfultext, failedtext, unchangedtext = self._mk_res_txt(
                 successful, failed, unchanged)
-            PrevWindow.tabWidget.setTabText(
-                0, f"可以重命名({len(successful)})")
-            PrevWindow.tabWidget.setTabText(
-                1, f"无法重命名({len(failed)})")
-            PrevWindow.tabWidget.setTabText(
-                2, f"无变化({len(unchanged)})")
+
+            PrevWindow.tabWidget.setTabText(0, f"可以重命名({len(successful)})")
+            PrevWindow.tabWidget.setTabText(1, f"无法重命名({len(failed)})")
+            PrevWindow.tabWidget.setTabText(2, f"无变化({len(unchanged)})")
+
             PrevWindow.textEdit_successful.setText(successfultext)
             PrevWindow.textEdit_failed.setText(failedtext)
             PrevWindow.textEdit_unchanged.setText(unchangedtext)
             PrevWindow.tabWidget.setCurrentIndex(0)
+
             if self._task_current.RENAMED:
                 PrevWindow.btn_confirm.setText('已完成重命名')
                 PrevWindow.btn_cancel.setText('关闭')
@@ -843,10 +947,12 @@ class RenameTool(qmw, rentwd):
             else:
                 PrevWindow.btn_confirm.setText('重命名( 不再确认 )')
                 PrevWindow.btn_cancel.setText('取消')
+
                 if successful:
                     PrevWindow.btn_confirm.setEnabled(True)
                 else:
                     PrevWindow.btn_confirm.setEnabled(False)
+
             PrevWindow.resize(700, 800)
             PrevWindow.show()
         else:
@@ -873,8 +979,8 @@ class Preview(qmw, prevwd):
 
     def _setbtn_confirm(self):
         if self.tabWidget.currentIndex() == 0:
-            if (MainWindow._task_current._successful
-                    and (not MainWindow._task_current.RENAMED)):
+            if MainWindow._task_current._successful and (
+                    not MainWindow._task_current.RENAMED):
                 self.btn_confirm.setEnabled(True)
             else:
                 self.btn_confirm.setEnabled(False)
@@ -893,8 +999,20 @@ class Preview(qmw, prevwd):
 
 
 if __name__ == '__main__':
-    app = app(sys.argv)
-    MainWindow = RenameTool()
-    PrevWindow = Preview()
-    MainWindow.show()
-    sys.exit(app.exec_())
+    argvs = sys.argv
+    argvs_lth = len(argvs)
+
+    if argvs_lth <= 1:
+        appl = app(argvs)
+        PrevWindow = Preview()
+        MainWindow = RenameTool()
+        MainWindow.show()
+        sys.exit(appl.exec_())
+    elif argvs_lth >= 2:
+        if argvs[1] == '-v':
+            print('Version of RenameTool GUI: %s.' % __version__)
+        else:
+            print('''Unknown option: %s
+usage: python RenameTool -v
+To get the version information of RenameTool.''' % argvs[1])
+        sys.exit()
