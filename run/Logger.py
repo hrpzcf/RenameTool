@@ -19,7 +19,7 @@ from time import localtime
 from time import strftime
 import random
 import os
-import sys
+# import sys
 
 
 class wLog(object):

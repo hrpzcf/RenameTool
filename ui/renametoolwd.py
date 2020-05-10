@@ -2,12 +2,11 @@
 
 # Form implementation generated from reading ui file 'renametoolwd.ui'
 #
-# Created by: PyQt5 UI code generator 5.14.1
+# Created by: PyQt5 UI code generator 5.14.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 
 
 class Ui_rentwd(object):
@@ -224,7 +223,8 @@ class Ui_rentwd(object):
         self.btn_RL_DelSelected = QtWidgets.QPushButton(self.groupBox_RuleList)
         self.btn_RL_DelSelected.setObjectName("btn_RL_DelSelected")
         self.verticalLayout.addWidget(self.btn_RL_DelSelected)
-        self.btn_RL_EditSelected = QtWidgets.QPushButton(self.groupBox_RuleList)
+        self.btn_RL_EditSelected = QtWidgets.QPushButton(
+            self.groupBox_RuleList)
         self.btn_RL_EditSelected.setObjectName("btn_RL_EditSelected")
         self.verticalLayout.addWidget(self.btn_RL_EditSelected)
         self.btn_RL_ClearAll = QtWidgets.QPushButton(self.groupBox_RuleList)
@@ -241,9 +241,12 @@ class Ui_rentwd(object):
         self.label_12 = QtWidgets.QLabel(self.groupBox_RuleList)
         self.label_12.setObjectName("label_12")
         self.verticalLayout_9.addWidget(self.label_12)
-        self.plainText_ExcludeFolder = QtWidgets.QPlainTextEdit(self.groupBox_RuleList)
-        self.plainText_ExcludeFolder.setContextMenuPolicy(QtCore.Qt.NoContextMenu)
-        self.plainText_ExcludeFolder.setLineWrapMode(QtWidgets.QPlainTextEdit.NoWrap)
+        self.plainText_ExcludeFolder = QtWidgets.QPlainTextEdit(
+            self.groupBox_RuleList)
+        self.plainText_ExcludeFolder.setContextMenuPolicy(
+            QtCore.Qt.NoContextMenu)
+        self.plainText_ExcludeFolder.setLineWrapMode(
+            QtWidgets.QPlainTextEdit.NoWrap)
         self.plainText_ExcludeFolder.setObjectName("plainText_ExcludeFolder")
         self.verticalLayout_9.addWidget(self.plainText_ExcludeFolder)
         self.horizontalLayout.addLayout(self.verticalLayout_9)
@@ -286,7 +289,8 @@ class Ui_rentwd(object):
         self.checkBox.setChecked(True)
         self.checkBox.setObjectName("checkBox")
         self.horizontalLayout_9.addWidget(self.checkBox)
-        self.btn_RL_AddToTaskList = QtWidgets.QPushButton(self.groupBox_RuleList)
+        self.btn_RL_AddToTaskList = QtWidgets.QPushButton(
+            self.groupBox_RuleList)
         self.btn_RL_AddToTaskList.setObjectName("btn_RL_AddToTaskList")
         self.horizontalLayout_9.addWidget(self.btn_RL_AddToTaskList)
         self.horizontalLayout_9.setStretch(1, 7)
@@ -342,7 +346,8 @@ class Ui_rentwd(object):
         self.verticalLayout_12.addWidget(self.groupBox_Tasks)
         self.groupBox_LogNRestore = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_LogNRestore.setObjectName("groupBox_LogNRestore")
-        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(self.groupBox_LogNRestore)
+        self.horizontalLayout_18 = QtWidgets.QHBoxLayout(
+            self.groupBox_LogNRestore)
         self.horizontalLayout_18.setObjectName("horizontalLayout_18")
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
         self.verticalLayout_7.setObjectName("verticalLayout_7")
@@ -356,7 +361,8 @@ class Ui_rentwd(object):
         self.horizontalLayout_4.addWidget(self.list_Logs)
         self.verticalLayout_2 = QtWidgets.QVBoxLayout()
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.btn_LNR_ClearLog = QtWidgets.QPushButton(self.groupBox_LogNRestore)
+        self.btn_LNR_ClearLog = QtWidgets.QPushButton(
+            self.groupBox_LogNRestore)
         self.btn_LNR_ClearLog.setEnabled(False)
         self.btn_LNR_ClearLog.setObjectName("btn_LNR_ClearLog")
         self.verticalLayout_2.addWidget(self.btn_LNR_ClearLog)
@@ -364,7 +370,8 @@ class Ui_rentwd(object):
         self.btn_LNR_ViewLog.setEnabled(False)
         self.btn_LNR_ViewLog.setObjectName("btn_LNR_ViewLog")
         self.verticalLayout_2.addWidget(self.btn_LNR_ViewLog)
-        self.btn_LNR_TryTRestore = QtWidgets.QPushButton(self.groupBox_LogNRestore)
+        self.btn_LNR_TryTRestore = QtWidgets.QPushButton(
+            self.groupBox_LogNRestore)
         self.btn_LNR_TryTRestore.setEnabled(False)
         self.btn_LNR_TryTRestore.setObjectName("btn_LNR_TryTRestore")
         self.verticalLayout_2.addWidget(self.btn_LNR_TryTRestore)
@@ -428,86 +435,133 @@ class Ui_rentwd(object):
         rentwd.setWindowTitle(_translate("rentwd", "批量重命名工具"))
         self.groupBox_SetRule.setTitle(_translate("rentwd", "设定规则"))
         self.label.setText(_translate("rentwd", "替换源:"))
-        self.lineEdit_ReplSrc.setStatusTip(_translate("rentwd", "必填项，多个替换源请用空格隔开，需要替换空格本身时，请输入 \\k 替代。"))
+        self.lineEdit_ReplSrc.setStatusTip(
+            _translate("rentwd", "必填项，多个替换源请用空格隔开，需要替换空格本身时，请输入 \\k 替代。"))
         self.label_2.setText(_translate("rentwd", "替换为:"))
-        self.lineEdit_ReplWith.setStatusTip(_translate("rentwd", "此处留空则表示将删除前面填写的字符。"))
-        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_Repl), _translate("rentwd", "替换"))
+        self.lineEdit_ReplWith.setStatusTip(
+            _translate("rentwd", "此处留空则表示将删除前面填写的字符。"))
+        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_Repl),
+                               _translate("rentwd", "替换"))
         self.label_13.setText(_translate("rentwd", "插入："))
-        self.comboBox_InsertWith.setStatusTip(_translate("rentwd", "选择插入日期时间、者普通字符或者数字序号。"))
+        self.comboBox_InsertWith.setStatusTip(
+            _translate("rentwd", "选择插入日期时间、者普通字符或者数字序号。"))
         self.comboBox_InsertWith.setItemText(0, _translate("rentwd", "日期时间"))
         self.comboBox_InsertWith.setItemText(1, _translate("rentwd", "普通字符"))
         self.comboBox_InsertWith.setItemText(2, _translate("rentwd", "数字序号"))
-        self.lineEdit_InsertForm.setToolTip(_translate("rentwd", "日期时间：%Y(年)、%y(年,两位数)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可与普通字符自由组合。\n"
-"数字序号：填写格式：<起始.步长.宽度>，可与普通字符组合，如 <0.1.3>~，则按 000~、001~、002~、003~…添加序号。"))
-        self.lineEdit_InsertForm.setStatusTip(_translate("rentwd", "具体用法请将鼠标置于本文本框上2秒以查看悬浮提示。"))
+        self.lineEdit_InsertForm.setToolTip(
+            _translate(
+                "rentwd",
+                "日期时间：%Y(年)、%y(年,两位数)、%m(月)、%d(日)、%H(时)、%M(分)、%S(秒)，可与普通字符自由组合。\n"
+                "数字序号：填写格式：<起始.步长.宽度>，可与普通字符组合，如 <0.1.3>~，则按 000~、001~、002~、003~…添加序号。"
+            ))
+        self.lineEdit_InsertForm.setStatusTip(
+            _translate("rentwd", "具体用法请将鼠标置于本文本框上2秒以查看悬浮提示。"))
         self.lineEdit_InsertForm.setText(_translate("rentwd", "[%Y-%m-%d]"))
         self.label_4.setText(_translate("rentwd", "插入位置："))
-        self.lineEdit_InsertPos.setStatusTip(_translate("rentwd", "自定义位置支持输入百分比或绝对数值，如果输入的百分比或绝对数值大于文件名长度，则插入到文件名末尾，不支持负数。"))
+        self.lineEdit_InsertPos.setStatusTip(
+            _translate(
+                "rentwd",
+                "自定义位置支持输入百分比或绝对数值，如果输入的百分比或绝对数值大于文件名长度，则插入到文件名末尾，不支持负数。"))
         self.lineEdit_InsertPos.setText(_translate("rentwd", "0.0%"))
-        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_Insert), _translate("rentwd", "插入"))
+        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_Insert),
+                               _translate("rentwd", "插入"))
         self.label_5.setText(_translate("rentwd", "左边界："))
-        self.lineEdit_RReplLB.setStatusTip(_translate("rentwd", "填写想要用来确定左边界的字符串(字符串越长匹配越准确)，左边界可以留空，留空时左边界默认为文件名最前端。"))
-        self.checkBox_IncludeLB.setStatusTip(_translate("rentwd", "是否包括左边界字符。"))
+        self.lineEdit_RReplLB.setStatusTip(
+            _translate("rentwd",
+                       "填写想要用来确定左边界的字符串(字符串越长匹配越准确)，左边界可以留空，留空时左边界默认为文件名最前端。"))
+        self.checkBox_IncludeLB.setStatusTip(_translate(
+            "rentwd", "是否包括左边界字符。"))
         self.checkBox_IncludeLB.setText(_translate("rentwd", "包含"))
         self.label_6.setText(_translate("rentwd", "右边界："))
-        self.lineEdit_RReplRB.setStatusTip(_translate("rentwd", "填写想要用来确定右边界的字符串(字符串越长匹配越准确)，右边界可以留空，留空时右边界默认为文件名末尾(默认不含扩展名)。"))
-        self.checkBox_IncludeRB.setStatusTip(_translate("rentwd", "是否包括右边界字符。"))
+        self.lineEdit_RReplRB.setStatusTip(
+            _translate(
+                "rentwd",
+                "填写想要用来确定右边界的字符串(字符串越长匹配越准确)，右边界可以留空，留空时右边界默认为文件名末尾(默认不含扩展名)。")
+        )
+        self.checkBox_IncludeRB.setStatusTip(_translate(
+            "rentwd", "是否包括右边界字符。"))
         self.checkBox_IncludeRB.setText(_translate("rentwd", "包含"))
         self.label_7.setText(_translate("rentwd", "边界内字符替换为："))
-        self.lineEdit_RReplWith.setStatusTip(_translate("rentwd", "此处留空则表示将删除范围内所有字符，注意此处和左右边界不能同时为空。"))
-        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_RRepl), _translate("rentwd", "范围替换"))
+        self.lineEdit_RReplWith.setStatusTip(
+            _translate("rentwd", "此处留空则表示将删除范围内所有字符，注意此处和左右边界不能同时为空。"))
+        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_RRepl),
+                               _translate("rentwd", "范围替换"))
         self.label_8.setText(_translate("rentwd", "正则表达式："))
-        self.lineEdit_RegexPattern.setStatusTip(_translate("rentwd", "此模式需要掌握正则表达式写法。正则表达式匹配时单词模式不生效，可以自己写表达式来匹配单词。"))
+        self.lineEdit_RegexPattern.setStatusTip(
+            _translate("rentwd",
+                       "此模式需要掌握正则表达式写法。正则表达式匹配时单词模式不生效，可以自己写表达式来匹配单词。"))
         self.label_9.setText(_translate("rentwd", "替换为："))
         self.lineEdit_ReRepl.setStatusTip(_translate("rentwd", "要替换掉匹配字符的字符。"))
         self.label_15.setText(_translate("rentwd", "替换次数："))
-        self.lineEdit_ReReplCount.setStatusTip(_translate("rentwd", "替换次数，0 代表全部替换。"))
+        self.lineEdit_ReReplCount.setStatusTip(
+            _translate("rentwd", "替换次数，0 代表全部替换。"))
         self.lineEdit_ReReplCount.setText(_translate("rentwd", "0"))
-        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_Regex), _translate("rentwd", "正则表达式"))
-        self.comboBox_InExcExt.setStatusTip(_translate("rentwd", "符合后面列出的扩展名的文件，限定只对其起作用或只对其不起作用。"))
+        self.tabwid.setTabText(self.tabwid.indexOf(self.tab_Regex),
+                               _translate("rentwd", "正则表达式"))
+        self.comboBox_InExcExt.setStatusTip(
+            _translate("rentwd", "符合后面列出的扩展名的文件，限定只对其起作用或只对其不起作用。"))
         self.comboBox_InExcExt.setItemText(0, _translate("rentwd", "指定文件格式"))
         self.comboBox_InExcExt.setItemText(1, _translate("rentwd", "排除文件格式"))
-        self.lineEdit_Exts.setStatusTip(_translate("rentwd", "此处留空则表示将对所有扩展名的文件进行操作。"))
-        self.lineEdit_Exts.setPlaceholderText(_translate("rentwd", "多个扩展名请用空格隔开，例如：mp3 mp4 mkv。"))
-        self.checkBox_Word.setStatusTip(_translate("rentwd", "单词模式下，如果文件名以单词组成(以空格分开的词，包括中文)，则会按单词进行匹配，不会拆分单词。"))
+        self.lineEdit_Exts.setStatusTip(
+            _translate("rentwd", "此处留空则表示将对所有扩展名的文件进行操作。"))
+        self.lineEdit_Exts.setPlaceholderText(
+            _translate("rentwd", "多个扩展名请用空格隔开，例如：mp3 mp4 mkv。"))
+        self.checkBox_Word.setStatusTip(
+            _translate("rentwd",
+                       "单词模式下，如果文件名以单词组成(以空格分开的词，包括中文)，则会按单词进行匹配，不会拆分单词。"))
         self.checkBox_Word.setText(_translate("rentwd", "单词模式"))
-        self.label_14.setStatusTip(_translate("rentwd", "重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。"))
+        self.label_14.setStatusTip(
+            _translate("rentwd", "重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。"))
         self.label_14.setText(_translate("rentwd", "作用范围："))
-        self.comboBox_SpInf.setStatusTip(_translate("rentwd", "重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。"))
+        self.comboBox_SpInf.setStatusTip(
+            _translate("rentwd", "重命名文件时的作用范围，当扩展名中有符合匹配项时是否对扩展名进行操作。"))
         self.comboBox_SpInf.setItemText(0, _translate("rentwd", "不含扩展名"))
         self.comboBox_SpInf.setItemText(1, _translate("rentwd", "仅限扩展名"))
         self.comboBox_SpInf.setItemText(2, _translate("rentwd", "全部：独立"))
         self.comboBox_SpInf.setItemText(3, _translate("rentwd", "全部：整体"))
-        self.btn_setrule_clear.setStatusTip(_translate("rentwd", "重置所有标签页的输入状态。"))
+        self.btn_setrule_clear.setStatusTip(
+            _translate("rentwd", "重置所有标签页的输入状态。"))
         self.btn_setrule_clear.setText(_translate("rentwd", "清空输入"))
-        self.btn_SaveToList.setStatusTip(_translate("rentwd", "把当前标签页的输入信息打包成一条规则并保存到列表。"))
+        self.btn_SaveToList.setStatusTip(
+            _translate("rentwd", "把当前标签页的输入信息打包成一条规则并保存到列表。"))
         self.btn_SaveToList.setText(_translate("rentwd", "保存到规则列表"))
         self.groupBox_RuleList.setTitle(_translate("rentwd", "规则列表"))
-        self.list_RulesList.setStatusTip(_translate("rentwd", "用户创建的重命名规则列表，同一规则可以多次与不同文件夹组合加入任务列表，或同一文件夹可以多次组合不同规则加入任务列表。"))
+        self.list_RulesList.setStatusTip(
+            _translate(
+                "rentwd",
+                "用户创建的重命名规则列表，同一规则可以多次与不同文件夹组合加入任务列表，或同一文件夹可以多次组合不同规则加入任务列表。"))
         self.btn_RL_DelSelected.setStatusTip(_translate("rentwd", "删除选中的规则。"))
         self.btn_RL_DelSelected.setText(_translate("rentwd", "删除"))
-        self.btn_RL_EditSelected.setStatusTip(_translate("rentwd", "编辑选中的规则，注意编辑完成后不要忘记重新保存到规则列表。"))
+        self.btn_RL_EditSelected.setStatusTip(
+            _translate("rentwd", "编辑选中的规则，注意编辑完成后不要忘记重新保存到规则列表。"))
         self.btn_RL_EditSelected.setText(_translate("rentwd", "编辑"))
         self.btn_RL_ClearAll.setStatusTip(_translate("rentwd", "清空规则列表。"))
         self.btn_RL_ClearAll.setText(_translate("rentwd", "清空"))
         self.label_12.setText(_translate("rentwd", "排除文件和文件夹:"))
-        self.plainText_ExcludeFolder.setStatusTip(_translate("rentwd", "要排除的文件和文件夹请输入完整、正确路径，否则排除的文件或文件夹将不生效。"))
-        self.plainText_ExcludeFolder.setPlaceholderText(_translate("rentwd", "填写多个文件或文件夹时请每行填写一个文件或文件夹路径。"))
+        self.plainText_ExcludeFolder.setStatusTip(
+            _translate("rentwd", "要排除的文件和文件夹请输入完整、正确路径，否则排除的文件或文件夹将不生效。"))
+        self.plainText_ExcludeFolder.setPlaceholderText(
+            _translate("rentwd", "填写多个文件或文件夹时请每行填写一个文件或文件夹路径。"))
         self.btn_chexcfile.setStatusTip(_translate("rentwd", "选择要排除的文件。"))
         self.btn_chexcfile.setText(_translate("rentwd", "选择文件"))
         self.btn_chexcfolder.setStatusTip(_translate("rentwd", "选择要排除的文件夹。"))
         self.btn_chexcfolder.setText(_translate("rentwd", "选择文件夹"))
-        self.btn_ClearExcfd.setStatusTip(_translate("rentwd", "清空要排除的文件或文件夹列表。"))
+        self.btn_ClearExcfd.setStatusTip(
+            _translate("rentwd", "清空要排除的文件或文件夹列表。"))
         self.btn_ClearExcfd.setText(_translate("rentwd", "清除全部"))
         self.label_11.setStatusTip(_translate("rentwd", "要进行批量重命名操作的文件夹。"))
         self.label_11.setText(_translate("rentwd", "目标文件夹:"))
-        self.lineEdit_TGPath.setStatusTip(_translate("rentwd", "要进行批量重命名操作的文件夹。"))
-        self.btn_CTGPath.setStatusTip(_translate("rentwd", "选择要进行批量重命名操作的文件夹。"))
+        self.lineEdit_TGPath.setStatusTip(
+            _translate("rentwd", "要进行批量重命名操作的文件夹。"))
+        self.btn_CTGPath.setStatusTip(_translate("rentwd",
+                                                 "选择要进行批量重命名操作的文件夹。"))
         self.btn_CTGPath.setText(_translate("rentwd", "…"))
         self.checkBox.setStatusTip(_translate("rentwd", "未完成的功能。"))
         self.checkBox.setText(_translate("rentwd", "深入子目录"))
-        self.btn_RL_AddToTaskList.setStatusTip(_translate("rentwd", "将规则、排除的文件、文件夹、目标目录打包成一个任务加入到任务列表。"))
-        self.btn_RL_AddToTaskList.setText(_translate("rentwd", "将选中规则+目标+排除组合加入任务"))
+        self.btn_RL_AddToTaskList.setStatusTip(
+            _translate("rentwd", "将规则、排除的文件、文件夹、目标目录打包成一个任务加入到任务列表。"))
+        self.btn_RL_AddToTaskList.setText(
+            _translate("rentwd", "将选中规则+目标+排除组合加入任务"))
         self.groupBox_Tasks.setTitle(_translate("rentwd", "任务"))
         self.label_10.setText(_translate("rentwd", "待执行任务 / 执行顺序:"))
         self.list_Tasks.setStatusTip(_translate("rentwd", "等待执行的任务列表。"))
@@ -519,26 +573,23 @@ class Ui_rentwd(object):
         self.btn_TS_MoveUp.setText(_translate("rentwd", "上移"))
         self.btn_TS_MoveDown.setStatusTip(_translate("rentwd", "将选中任务下移。"))
         self.btn_TS_MoveDown.setText(_translate("rentwd", "下移"))
-        self.btn_TS_PrevSel.setStatusTip(_translate("rentwd", "预览选中的任务的执行结果，在弹出的结果预览窗口中决定是否重命名。注意预览结果不代表最终结果，可能正式重命名过程中还会有重命名失败的文件。"))
+        self.btn_TS_PrevSel.setStatusTip(
+            _translate(
+                "rentwd",
+                "预览选中的任务的执行结果，在弹出的结果预览窗口中决定是否重命名。注意预览结果不代表最终结果，可能正式重命名过程中还会有重命名失败的文件。"
+            ))
         self.btn_TS_PrevSel.setText(_translate("rentwd", "预览"))
-        self.btn_TS_PrevAll.setStatusTip(_translate("rentwd", "考虑到可能会有大量文件进行重命名造成性能问题，该功能暂不可用。"))
+        self.btn_TS_PrevAll.setStatusTip(
+            _translate("rentwd", "考虑到可能会有大量文件进行重命名造成性能问题，该功能暂不可用。"))
         self.btn_TS_PrevAll.setText(_translate("rentwd", "预览全部"))
         self.groupBox_LogNRestore.setTitle(_translate("rentwd", "记录 / 还原"))
         self.label_3.setText(_translate("rentwd", "重命名记录："))
-        self.list_Logs.setStatusTip(_translate("rentwd", "重命名后生成的历史记录，可以提供有限的恢复功能。"))
+        self.list_Logs.setStatusTip(
+            _translate("rentwd", "重命名后生成的历史记录，可以提供有限的恢复功能。"))
         self.btn_LNR_ClearLog.setStatusTip(_translate("rentwd", "删除选中的历史记录。"))
         self.btn_LNR_ClearLog.setText(_translate("rentwd", "删除记录"))
         self.btn_LNR_ViewLog.setStatusTip(_translate("rentwd", "查看选中的历史记录。"))
         self.btn_LNR_ViewLog.setText(_translate("rentwd", "查看记录"))
-        self.btn_LNR_TryTRestore.setStatusTip(_translate("rentwd", "尝试将上一次重命名操作进行还原。"))
+        self.btn_LNR_TryTRestore.setStatusTip(
+            _translate("rentwd", "尝试将上一次重命名操作进行还原。"))
         self.btn_LNR_TryTRestore.setText(_translate("rentwd", "尝试还原"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    rentwd = QtWidgets.QMainWindow()
-    ui = Ui_rentwd()
-    ui.setupUi(rentwd)
-    rentwd.show()
-    sys.exit(app.exec_())

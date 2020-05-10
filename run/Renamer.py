@@ -19,18 +19,17 @@ osSep = os.sep
 class Task(object):
     MAX_NAME = 255
     __ESCAPE = {
-        '^': '\^',
-        '$': '\$',
-        '(': '\(',
-        ')': '\)',
-        '-': '\-',
-        '[': '\[',
-        ']': '\]',
-        '{': '\{',
-        '}': '\}',
-        '.': '\.',
-        '+': '\+',
-        ',': '\,',
+        r'^': r'\^',
+        r'$': r'\$',
+        r'(': r'\(',
+        r')': r'\)',
+        r'-': r'\-',
+        r'[': r'\[',
+        r']': r'\]',
+        r'{': r'\}',
+        r'.': r'\.',
+        r'+': r'\+',
+        r',': r'\,',
     }
 
     def __init__(self, title, target, statedict):
@@ -107,9 +106,9 @@ class Task(object):
         :return srcs: 匹配到的字符串列表。
         '''
         if self.stdict['word']:
-            pt = f'{rrepllb}\S+{rreplrb}'
+            pt = fr'{rrepllb}\S+{rreplrb}'
         else:
-            pt = f'{rrepllb}.+{rreplrb}'
+            pt = fr'{rrepllb}.+{rreplrb}'
 
         srcs = re.findall(pt, string)
 
@@ -124,7 +123,7 @@ class Task(object):
     def __repl_str(self, string, srcs, repl):
         for src in srcs:
             if self.stdict['word']:
-                string = re.sub(f'(?<=\s){src}(?=\s|$)|(?<=^){src}(?=\s|$)',
+                string = re.sub(fr'(?<=\s){src}(?=\s|$)|(?<=^){src}(?=\s|$)',
                                 repl, string)
             else:
                 string = re.sub(f'{src}', repl, string)

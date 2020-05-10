@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import QFileDialog as qfd
 from PyQt5.QtWidgets import QMainWindow as qmw
 
 from run.Renamer import Task
-from ui import *
+from ui import prevwd, rentwd
 
 __osSep__ = os.sep
 __myDir__ = os.path.dirname(os.path.realpath(__file__))
@@ -65,7 +65,7 @@ class RenameTool(qmw, rentwd):
             if not os.path.exists(i):
                 try:
                     os.mkdir(i)
-                except:
+                except Exception:
                     return False
             elif not os.path.isdir(i):
                 return False
@@ -164,7 +164,7 @@ class RenameTool(qmw, rentwd):
                 self._settingstate['checkBox_incrb'])
             # 目标文件夹文本框
             self.lineEdit_TGPath.setText(self._settingstate['defaultdir'])
-        except:
+        except Exception:
             pass
 
     def _loadsettings(self):
@@ -503,13 +503,13 @@ class RenameTool(qmw, rentwd):
         if ('%' in insertpos) and (insertpos[-1] == '%'):
             try:
                 state['insertpos'] = abs(float(insertpos[:-1])) / 100
-            except:
+            except Exception:
                 self.tips('文本插入位置百分比输入有误，请重新输入！')
                 return False
         else:
             try:
                 state['insertpos'] = abs(int(float(insertpos)))
-            except:
+            except Exception:
                 self.tips('文本插入绝对位置输入有误，请重新输入！')
                 return False
 
@@ -567,7 +567,7 @@ class RenameTool(qmw, rentwd):
                 self.tips('替换次数输入不正确。')
                 self.lineEdit_ReReplCount.setFocus()
                 return False
-        except:
+        except Exception:
             self.tips('替换次数输入不正确。')
             self.lineEdit_ReReplCount.setFocus()
             return False
@@ -648,7 +648,7 @@ class RenameTool(qmw, rentwd):
                 self._pktitle(self._packetlist[i],
                               str(i + 1) + '.', wid))
 
-        if ind == None:
+        if ind is None:
             if lth:
                 self.list_RulesList.setCurrentRow(0)
         else:
@@ -963,7 +963,7 @@ class RenameTool(qmw, rentwd):
         正式进行重命名操作。
         '''
         if mode == 'sel':
-            if self._task_current != None:
+            if self._task_current is not None:
                 self._task_current.start()
         elif mode == 'all':
             pass
@@ -1010,7 +1010,8 @@ if __name__ == '__main__':
         sys.exit(appl.exec_())
     elif argvs_lth >= 2:
         if argvs[1] == '-v':
-            print('Version of RenameTool GUI: %s.' % __version__)
+            print('The version information of RenameTool GUI: %s.' %
+                  __version__)
         else:
             print('''Unknown option: %s
 usage: python RenameTool -v
