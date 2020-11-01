@@ -8,8 +8,13 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>600</height>
+    <height>616</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <family>Microsoft YaHei UI</family>
+   </font>
   </property>
   <property name="focusPolicy">
    <enum>Qt::StrongFocus</enum>
@@ -653,7 +658,7 @@
                     <string>清空任务列表。</string>
                    </property>
                    <property name="text">
-                    <string>清空列表</string>
+                    <string>清空任务</string>
                    </property>
                   </widget>
                  </item>

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 '''
 --------------------------------------
 @Version   : 20.0425.00
@@ -15,10 +15,10 @@
 #   模块单独拿出来也可以给别的程序使用；
 #   等等…
 
-from time import localtime
-from time import strftime
-import random
 import os
+import random
+from time import localtime, strftime
+
 # import sys
 
 
