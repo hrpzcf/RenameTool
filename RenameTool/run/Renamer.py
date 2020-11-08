@@ -11,7 +11,7 @@ import os
 import re
 from time import localtime, strftime
 
-from run.Logger import wLog
+from RenameTool.run.Logger import wLog
 
 osSep = os.sep
 
@@ -36,11 +36,20 @@ class Task(object):
         self.target = target
         self.stdict = statedict
 
-        excfd = '，'.join(
-            [i + osSep if os.path.isdir(i) else i
-             for i in statedict['excfd']]) if statedict['excfd'] else '无'
+        excfd = (
+            '，'.join(
+                [
+                    i + osSep if os.path.isdir(i) else i
+                    for i in statedict['excfd']
+                ]
+            )
+            if statedict['excfd']
+            else '无'
+        )
 
-        self.title = f'目标：< {target}{osSep} >\n排除：< {excfd} >\n{title}\n{"-" * 50}'
+        self.title = (
+            f'目标：< {target}{osSep} >\n排除：< {excfd} >\n{title}\n{"-" * 50}'
+        )
 
         self._successful = dict()
         self._failed = dict()
@@ -123,8 +132,9 @@ class Task(object):
     def __repl_str(self, string, srcs, repl):
         for src in srcs:
             if self.stdict['word']:
-                string = re.sub(fr'(?<=\s){src}(?=\s|$)|(?<=^){src}(?=\s|$)',
-                                repl, string)
+                string = re.sub(
+                    fr'(?<=\s){src}(?=\s|$)|(?<=^){src}(?=\s|$)', repl, string
+                )
             else:
                 string = re.sub(f'{src}', repl, string)
 
@@ -171,11 +181,13 @@ class Task(object):
 
             fullpath_new = os.path.join(folder, filename + ext)
 
-            if (set(filename + ext) != '.') and (len(fullpath_new) <=
-                                                 self.MAX_NAME):
+            if (set(filename + ext) != '.') and (
+                len(fullpath_new) <= self.MAX_NAME
+            ):
                 if fullpath != fullpath_new:
-                    if fullpath_new not in self._successful.values(
-                    ) and not os.path.exists(fullpath_new):
+                    if fullpath_new not in self._successful.values() and not os.path.exists(
+                        fullpath_new
+                    ):
                         self._successful[fullpath] = fullpath_new
                     else:
                         self._failed[fullpath] = fullpath_new
@@ -230,11 +242,13 @@ class Task(object):
 
             fullpath_new = os.path.join(folder, filename + ext)
 
-            if (set(filename + ext) != '.') and (len(fullpath_new) <=
-                                                 self.MAX_NAME):
-                if (fullpath != fullpath_new):
-                    if fullpath_new not in self._successful.values(
-                    ) and not os.path.exists(fullpath_new):
+            if (set(filename + ext) != '.') and (
+                len(fullpath_new) <= self.MAX_NAME
+            ):
+                if fullpath != fullpath_new:
+                    if fullpath_new not in self._successful.values() and not os.path.exists(
+                        fullpath_new
+                    ):
                         self._successful[fullpath] = fullpath_new
                     else:
                         self._failed[fullpath] = fullpath_new
@@ -258,14 +272,16 @@ class Task(object):
             str_to_ins = form
 
         elif insertwith == '数字序号':
-            re_sch = re.search(r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>',
-                               form)
+            re_sch = re.search(
+                r'<([0-9]{1,10}\.[0-9]{1,10}\.[1-9]{1,10})>', form
+            )
             begin, step, wid = map(int, re_sch.group(1).split('.'))
 
         for fullpath in self.__allfile():
             if insertwith == '数字序号':
-                str_to_ins = form.replace(re_sch.group(),
-                                          f'{str(begin):0>{wid}}')
+                str_to_ins = form.replace(
+                    re_sch.group(), f'{str(begin):0>{wid}}'
+                )
 
             folder = os.path.dirname(fullpath)
             filename, ext = os.path.splitext(os.path.basename(fullpath))
@@ -281,8 +297,9 @@ class Task(object):
                     if insertpos > filename_length:
                         insertpos = filename_length
 
-                    filename = self.__ins_with_pos(filename, str_to_ins,
-                                                   insertpos)
+                    filename = self.__ins_with_pos(
+                        filename, str_to_ins, insertpos
+                    )
                 else:
                     filename = str_to_ins
 
@@ -305,8 +322,9 @@ class Task(object):
                     if insertpos > filename_length:
                         insertpos = filename_length
 
-                    filename = self.__ins_with_pos(filename, str_to_ins,
-                                                   insertpos)
+                    filename = self.__ins_with_pos(
+                        filename, str_to_ins, insertpos
+                    )
                 else:
                     filename = str_to_ins
 
@@ -327,23 +345,27 @@ class Task(object):
                 if filename:
                     if instance_pos:
                         insertpos = int(
-                            (filename_length + ext_length) * insertpos)
+                            (filename_length + ext_length) * insertpos
+                        )
 
                     if insertpos > (filename_length + ext_length):
                         insertpos = filename_length + ext_length
 
-                    filename = self.__ins_with_pos(filename, str_to_ins,
-                                                   insertpos)
+                    filename = self.__ins_with_pos(
+                        filename, str_to_ins, insertpos
+                    )
                 else:
                     filename = str_to_ins
 
             fullpath_new = os.path.join(folder, filename + ext)
 
-            if (set(filename + ext) != '.') and (len(fullpath_new) <=
-                                                 self.MAX_NAME):
+            if (set(filename + ext) != '.') and (
+                len(fullpath_new) <= self.MAX_NAME
+            ):
                 if fullpath_new != fullpath:
-                    if (fullpath_new not in self._successful.values()
-                            and not os.path.exists(fullpath_new)):
+                    if fullpath_new not in self._successful.values() and not os.path.exists(
+                        fullpath_new
+                    ):
                         self._successful[fullpath] = fullpath_new
 
                         if insertwith == '数字序号':
@@ -381,11 +403,13 @@ class Task(object):
 
             fullpath_new = os.path.join(folder, filename + ext)
 
-            if (set(filename + ext) != '.') and (len(fullpath_new) <=
-                                                 self.MAX_NAME):
+            if (set(filename + ext) != '.') and (
+                len(fullpath_new) <= self.MAX_NAME
+            ):
                 if fullpath != fullpath_new:
-                    if fullpath_new not in self._successful.values(
-                    ) and not os.path.exists(fullpath_new):
+                    if fullpath_new not in self._successful.values() and not os.path.exists(
+                        fullpath_new
+                    ):
                         self._successful[fullpath] = fullpath_new
                     else:
                         self._failed[fullpath] = fullpath_new

@@ -39,14 +39,24 @@ class wLog(object):
 
         if self.filename:
             # 无法创建文件则报错退出。
-            self.filehd = open(os.path.join(self.setspath, self.filename),
-                               'wt',
-                               encoding='utf-8')
+            self.filehd = open(
+                os.path.join(self.setspath, self.filename),
+                'wt',
+                encoding='utf-8',
+            )
             self.filehd.write(''.join((self.title, f'\n{"-" * 50}')))
 
     def __mkfilename(self):
-        filename = '-'.join((self.title, f'{str(abs(hash(self.title))):0>10}',
-                             str(random.randrange(10000, 100000)))) + '.log'
+        filename = (
+            '-'.join(
+                (
+                    self.title,
+                    f'{str(abs(hash(self.title))):0>10}',
+                    str(random.randrange(10000, 100000)),
+                )
+            )
+            + '.log'
+        )
 
         if os.path.exists(os.path.join(self.setspath, filename)):
             return self.__mkfilename()
@@ -57,7 +67,8 @@ class wLog(object):
         if self.filehd:
             self.filehd.write('\n')
             string = ''.join(
-                ('重命名前：', string1, '\n', '重命名后：', string2, f'\n{"-" * 50}'))
+                ('重命名前：', string1, '\n', '重命名后：', string2, f'\n{"-" * 50}')
+            )
             self.filehd.write(string)
         # return self.filename
 

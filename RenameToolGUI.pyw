@@ -18,13 +18,12 @@ from PyQt5.QtWidgets import QApplication as app
 from PyQt5.QtWidgets import QFileDialog as qfd
 from PyQt5.QtWidgets import QMainWindow as qmw
 
-from run.Renamer import Task
-from ui import prevwd, rentwd
+from RenameTool import __version__
+from RenameTool.run.Renamer import Task
+from RenameTool.ui import prevwd, rentwd
 
 __osSep__ = os.sep
 __myDir__ = os.path.dirname(os.path.realpath(__file__))
-
-__version__ = '2020.0502.00 Alpha'
 
 
 class RenameTool(qmw, rentwd):
