@@ -14,6 +14,6 @@
 
 ------
 
-- 程序入口为 RenameToolGUI.py。
+- 程序入口为 RenameToolGUI.pyw。
 - 程序源码还没有写完，主要是历史记录部分和其他细节功能，但不影响正常使用。  
 - 程序可以运行在带有 Python3 的 Windows 和 Linux（在deepin上测试）上。  
